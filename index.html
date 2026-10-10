@@ -840,7 +840,7 @@ const DEFAULT_QS=[
   const orbs=orbHues.map(h=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:180+Math.random()*140,h}));
   function newParticle(){
     const vx=(Math.random()-.5)*.42,vy=(Math.random()-.5)*.42;
-    return{x:Math.random()*W,y:Math.random()*H,bvx:vx,bvy:vy,vx,vy,r:Math.random()*2+.6,a:.35+Math.random()*.65,
+    return{x:Math.random()*W,y:Math.random()*H,bvx:vx,bvy:vy,vx,vy,r:Math.random()*2+.8,a:.55+Math.random()*.45,
       tw:Math.random()*6.28,ts:.0008+Math.random()*.0018,tint:Math.random()<.22,ho:Math.random()*80-40};
   }
   function resize(){
@@ -848,9 +848,9 @@ const DEFAULT_QS=[
     W=window.innerWidth;H=window.innerHeight;
     c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);
     ctx.setTransform(dpr,0,0,dpr,0,0);
-    const want=Math.round(Math.min(110,Math.max(32,W*H/15000)));
+    const want=Math.round(Math.min(170,Math.max(70,W*H/7500)));
     while(particles.length<want)particles.push(newParticle());
-    if(particles.length>want)particles.length=want;
+    if(particles.length>want*1.6)particles.length=Math.round(want*1.6);
     particles.forEach(p=>{if(p.x>W)p.x=Math.random()*W;if(p.y>H)p.y=Math.random()*H;});
   }
   resize();window.addEventListener('resize',resize);
@@ -947,10 +947,10 @@ const DEFAULT_QS=[
       p.vx+=(p.bvx-p.vx)*relax;p.vy+=(p.bvy-p.vy)*relax;
       p.x+=p.vx;p.y+=p.vy;
       if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-      const tw=.6+.4*Math.sin(now*p.ts+p.tw);
+      const tw=.8+.2*Math.sin(now*p.ts+p.tw);
       ctx.beginPath();ctx.arc(p.x,p.y,p.r*(.85+.3*tw),0,Math.PI*2);
       if(p.tint)ctx.fillStyle=`hsla(${(hs+p.ho+360)%360},95%,${isDark?72:45}%,${p.a*tw*(isDark?.85:.55)})`;
-      else ctx.fillStyle=isDark?`rgba(180,200,255,${p.a*.55*tw})`:`rgba(80,100,140,${p.a*.3*tw})`;
+      else ctx.fillStyle=isDark?`rgba(190,210,255,${p.a*.85*tw})`:`rgba(80,100,140,${p.a*.45*tw})`;
       ctx.fill();
     }
     ctx.lineWidth=.7;
