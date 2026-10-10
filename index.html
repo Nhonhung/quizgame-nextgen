@@ -296,29 +296,330 @@ img,video,canvas{max-width:100%}
 }
 
 /* ── CAT MASCOT ── */
-.cat-stage{position:relative;display:inline-block;margin-bottom:8px;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
-.cat-wrap{transform-origin:50% 100%;filter:drop-shadow(0 8px 18px rgba(245,158,11,.4));animation:catIn .95s cubic-bezier(.34,1.56,.64,1) both,catBob 3.4s ease-in-out .95s infinite}
-.cat-wrap svg{display:block;overflow:visible}
+.cat-box{display:flex;flex-direction:column;align-items:center;margin-bottom:6px}
+.cat-stage{position:relative;display:block;width:calc(140px*var(--sz,1));margin:0 auto 4px;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;outline:none;border-radius:24px;
+  --fur:#fbbf24;--fur-d:#b45309;--belly:#fff3d1;--ear:#f9a8d4;--eye:#1f2937;--acc:#ec4899;--acc-d:#9d174d;--ink:#1f2937;--patch:#f8fafc}
+.cat-stage:focus-visible{outline:2px dashed var(--violet);outline-offset:6px}
+.cat-stage svg{display:block;width:100%;height:auto;overflow:visible}
+.cat-wrap{transform-origin:50% 100%;filter:drop-shadow(0 8px 14px rgba(0,0,0,.3));filter:drop-shadow(0 8px 16px color-mix(in srgb,var(--fur) 42%,transparent));animation:catBob 3.4s ease-in-out infinite}
+.cat-wrap.intro{animation:catIn .95s cubic-bezier(.34,1.56,.64,1) both,catBob 3.4s ease-in-out .95s infinite}
+.cat-mood,.cat-jumper{transform-origin:50% 88%}
 @keyframes catIn{0%{opacity:0;transform:translateY(46px) scale(.25) rotate(-14deg)}60%{opacity:1;transform:translateY(-9px) scale(1.08) rotate(3deg)}100%{opacity:1;transform:none}}
-@keyframes catBob{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-3px) scaleY(1.018)}}
-.cat-jump{animation:catJump .75s cubic-bezier(.3,1.3,.5,1)}
-@keyframes catJump{0%{transform:none}25%{transform:translateY(-28px) scale(.94,1.08)}55%{transform:translateY(0) scale(1.1,.88)}78%{transform:translateY(-6px) scale(.98,1.03)}100%{transform:none}}
-.cat-tail{transform-origin:100px 112px;animation:catTail 1.7s ease-in-out infinite}
-@keyframes catTail{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(15deg)}}
-.cat-head{transform-origin:70px 92px;animation:catHead 6s ease-in-out infinite}
+@keyframes catBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+/* svg parts */
+.k-furs{fill:var(--fur);stroke:var(--fur-d);stroke-width:2.6;stroke-linejoin:round}
+.k-belly{fill:var(--belly)}
+.k-ear{fill:var(--ear)}
+.k-eye{fill:var(--eye)}
+.k-patch{fill:var(--patch);stroke:none}
+.k-accs{fill:var(--acc);stroke:var(--acc-d);stroke-width:2.2;stroke-linejoin:round}
+.k-acc{fill:var(--acc)}
+.k-line{fill:none;stroke:var(--fur-d);stroke-linecap:round}
+.k-stripe{fill:none;stroke:var(--fur-d);stroke-width:3.4;stroke-linecap:round;opacity:.55}
+.k-ink{fill:none;stroke:var(--ink);stroke-width:4.6;stroke-linecap:round;stroke-linejoin:round}
+.k-mouth{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.k-whisk{fill:none;stroke:var(--text);stroke-width:1.8;stroke-linecap:round;opacity:.5}
+.k-glass{fill:rgba(186,230,253,.22);stroke:var(--acc);stroke-width:3.4}
+.k-glassl{fill:none;stroke:var(--acc);stroke-width:3.2;stroke-linecap:round}
+.cheek{fill:#fb7185;opacity:.38;transition:opacity .3s}
+.tail-o{fill:none;stroke:var(--fur-d);stroke-width:17;stroke-linecap:round}
+.tail-i{fill:none;stroke:var(--fur);stroke-width:12.5;stroke-linecap:round}
+.tail-r{fill:none;stroke:var(--fur-d);stroke-width:12.5;stroke-dasharray:5 11;opacity:0}
+.cat-stage[data-pat=tabby] .tail-r{opacity:.5}
+.pat-tabby,.pat-patch,.acc{display:none}
+.cat-stage[data-pat=tabby] .pat-tabby,.cat-stage[data-pat=patch] .pat-patch{display:inline}
+.cat-stage[data-acc=bow] .acc-bow,.cat-stage[data-acc=hat] .acc-hat,.cat-stage[data-acc=glasses] .acc-glasses,.cat-stage[data-acc=scarf] .acc-scarf,.cat-stage[data-acc=crown] .acc-crown{display:inline}
+
+/* face sets */
+.e-open,.e-happy,.e-closed,.e-love,.e-dizzy,.m-smile,.m-open,.m-frown,.m-sad,.m-o,.m-yawn,.m-wave,.brow-angry,.brow-sad,.tear{display:none}
+.cat-stage[data-mood=idle] :is(.e-open,.m-smile),
+.cat-stage[data-mood=sleepy] :is(.e-open,.m-smile),
+.cat-stage[data-mood=sleep] :is(.e-closed,.m-smile),
+.cat-stage[data-mood=purr] :is(.e-closed,.m-smile),
+.cat-stage[data-mood=love] :is(.e-love,.m-smile),
+.cat-stage[data-mood=happy] :is(.e-happy,.m-open),
+.cat-stage[data-mood=wave] :is(.e-happy,.m-open),
+.cat-stage[data-mood=angry] :is(.e-open,.brow-angry,.m-frown),
+.cat-stage[data-mood=sad] :is(.e-open,.brow-sad,.tear,.m-sad),
+.cat-stage[data-mood=dizzy] :is(.e-dizzy,.m-wave),
+.cat-stage[data-mood=surprised] :is(.e-open,.m-o){display:inline}
+.cat-stage:is(.act-yawn,.act-lick,.act-stretch,.act-sneeze,.act-eat,.act-wave,.act-spin,.act-jump,.act-no,.act-sigma,.act-clap)[data-mood] :is(.e-open,.e-happy,.e-closed,.e-love,.e-dizzy,.m-smile,.m-open,.m-frown,.m-sad,.m-o,.m-wave,.brow-angry,.brow-sad,.tear){display:none}
+.cat-stage:is(.act-yawn,.act-lick,.act-stretch,.act-sneeze)[data-mood] .e-closed{display:inline}
+.cat-stage:is(.act-eat,.act-wave,.act-spin,.act-jump)[data-mood] .e-happy{display:inline}
+.cat-stage.act-yawn[data-mood] .m-yawn{display:inline}
+.cat-stage:is(.act-lick,.act-stretch)[data-mood] .m-smile{display:inline}
+.cat-stage.act-sneeze[data-mood] .m-o{display:inline}
+.cat-stage:is(.act-eat,.act-wave,.act-spin,.act-jump)[data-mood] .m-open{display:inline}
+.cat-stage:is([data-mood=love],[data-mood=purr],[data-mood=happy]) .cheek{opacity:.72}
+.cat-stage[data-mood=angry] .cheek{fill:#ef4444;opacity:.55}
+
+/* base loops */
+.g-all{transform-origin:100px 182px;animation:catBreath 3.2s ease-in-out infinite}
+@keyframes catBreath{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.026)}}
+.cat-tail{transform-origin:142px 164px;animation:catTail 1.9s ease-in-out infinite}
+@keyframes catTail{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(14deg)}}
+@keyframes catTailAngry{0%,100%{transform:rotate(-24deg)}50%{transform:rotate(26deg)}}
+.head-follow{transform-origin:100px 118px;transition:transform .25s ease-out}
+.cat-head{transform-origin:100px 118px;animation:catHead 6s ease-in-out infinite}
 @keyframes catHead{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
-.cat-ear-l{transform-origin:52px 40px;animation:catEarL 5.2s infinite}
-.cat-ear-r{transform-origin:88px 40px;animation:catEarR 6.4s infinite}
+.cat-ear-l{transform-origin:68px 52px;animation:catEarL 5.2s infinite}
+.cat-ear-r{transform-origin:132px 52px;animation:catEarR 6.4s infinite}
 @keyframes catEarL{0%,88%,100%{transform:rotate(0)}91%{transform:rotate(-13deg)}94%{transform:rotate(3deg)}97%{transform:rotate(-5deg)}}
 @keyframes catEarR{0%,80%,100%{transform:rotate(0)}83%{transform:rotate(13deg)}86%{transform:rotate(-3deg)}89%{transform:rotate(4deg)}}
-.cat-eye{transform-box:fill-box;transform-origin:center;animation:catBlink 4.6s infinite}
+.cat-stage[data-mood=idle]:hover .cat-ear-l{animation:none;transform:rotate(6deg) scale(1.05)}
+.cat-stage[data-mood=idle]:hover .cat-ear-r{animation:none;transform:rotate(-6deg) scale(1.05)}
+.eye{transform-box:fill-box;transform-origin:center;animation:catBlink 4.6s infinite}
 @keyframes catBlink{0%,91%,100%{transform:scaleY(1)}94.5%{transform:scaleY(.08)}}
-.cat-pupil{transition:transform .12s ease-out}
-.cat-bubble{position:absolute;left:calc(100% + 2px);top:4px;width:max-content;max-width:min(150px,calc(50vw - 66px));padding:6px 12px;border-radius:14px 14px 14px 4px;background:var(--card);border:1px solid var(--border2);color:var(--text);font-size:12px;font-weight:600;line-height:1.4;text-align:left;opacity:0;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.25)}
-.cat-bubble.show{animation:catBubble 3.4s ease both}
-.cat-bubble.first{animation-delay:1.2s}
-@keyframes catBubble{0%{opacity:0;transform:translateY(6px) scale(.8)}10%{opacity:1;transform:none}85%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-4px)}}
-@media(prefers-reduced-motion:reduce){.cat-wrap,.cat-tail,.cat-head,.cat-ear-l,.cat-ear-r,.cat-eye{animation:none!important}}
+.pupil-g{transition:transform .12s ease-out}
+.e-open{transform-box:fill-box;transform-origin:50% 60%}
+.arm-l{transform-origin:80px 130px}
+.arm-r{transform-origin:120px 130px}
+.beat{transform-box:fill-box;transform-origin:center;animation:catBeat .8s ease-in-out infinite}
+@keyframes catBeat{0%,100%{transform:scale(1)}30%{transform:scale(1.22)}60%{transform:scale(.95)}}
+.spiral{transform-box:fill-box;transform-origin:center;animation:catSpinS 1s linear infinite}
+@keyframes catSpinS{to{transform:rotate(360deg)}}
+.tear-d{animation:catTear 1.8s ease-in infinite}
+.tear-d.t2{animation-delay:.9s}
+@keyframes catTear{0%{transform:translateY(0) scale(.6);opacity:0}20%{opacity:1;transform:translateY(0) scale(1)}100%{transform:translateY(16px);opacity:0}}
+.m-sad{transform-box:fill-box;transform-origin:center;animation:catTremble .3s linear infinite}
+@keyframes catTremble{0%,100%{transform:translateX(-.6px)}50%{transform:translateX(.6px)}}
+
+/* moods */
+.cat-stage[data-mood=happy] .cat-mood{animation:catHop 1s ease-in-out infinite}
+@keyframes catHop{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-8px) scale(.97,1.05)}60%{transform:translateY(0) scale(1.04,.95)}}
+.cat-stage[data-mood=love] .cat-mood{animation:catFloat 2.2s ease-in-out infinite}
+@keyframes catFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-5px) rotate(2deg)}}
+.cat-stage[data-mood=purr] .cat-mood{animation:catVibe .09s linear infinite}
+@keyframes catVibe{0%,100%{transform:translateX(-.9px)}50%{transform:translateX(.9px)}}
+.cat-stage[data-mood=dizzy] .cat-mood{animation:catSway 1.1s ease-in-out infinite}
+@keyframes catSway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.cat-stage[data-mood=sleep] .cat-mood{transform:translateY(5px) scaleY(.96)}
+.cat-stage[data-mood=sad] .cat-mood{transform:translateY(4px) scale(.98)}
+.cat-stage[data-mood=angry] .cat-mood{transform:scale(1.05)}
+.cat-stage[data-mood=surprised] .cat-mood{animation:catPop .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes catPop{0%{transform:scale(1)}40%{transform:translateY(-14px) scale(1.1)}100%{transform:scale(1.05)}}
+.cat-stage[data-mood=happy] .cat-tail,.cat-stage[data-mood=love] .cat-tail,.cat-stage[data-mood=wave] .cat-tail{animation-duration:.5s}
+.cat-stage[data-mood=angry] .cat-tail{animation:catTailAngry .3s ease-in-out infinite}
+.cat-stage[data-mood=sad] .cat-tail{animation:none;transform:rotate(18deg)}
+.cat-stage[data-mood=sleep] .cat-tail,.cat-stage[data-mood=sleepy] .cat-tail{animation-duration:4.5s}
+.cat-stage[data-mood=surprised] .cat-tail{animation:none;transform:rotate(-26deg) scale(1.12)}
+.cat-stage[data-mood=sleep] .cat-head{animation:catNod 3.6s ease-in-out infinite}
+@keyframes catNod{0%,100%{transform:translateY(6px) rotate(6deg)}50%{transform:translateY(9px) rotate(2deg)}}
+.cat-stage[data-mood=sleepy] .cat-head{animation:catNodS 2.4s ease-in-out infinite}
+@keyframes catNodS{0%,100%{transform:translateY(0) rotate(-2deg)}55%{transform:translateY(5px) rotate(5deg)}70%{transform:translateY(1px) rotate(0)}}
+.cat-stage[data-mood=sad] .cat-head{animation:none;transform:translateY(7px) rotate(5deg)}
+.cat-stage[data-mood=angry] .cat-head{animation:catShake .16s linear infinite}
+@keyframes catShake{0%,100%{transform:translateX(-1.4px)}50%{transform:translateX(1.4px)}}
+.cat-stage[data-mood=dizzy] .cat-head{animation:catWobble 1s ease-in-out infinite}
+@keyframes catWobble{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}
+.cat-stage[data-mood=love] .cat-head{animation:catWobble 1.8s ease-in-out infinite}
+.cat-stage[data-mood=angry] .cat-ear-l{animation:none;transform:rotate(-26deg)}
+.cat-stage[data-mood=angry] .cat-ear-r{animation:none;transform:rotate(26deg)}
+.cat-stage[data-mood=sad] .cat-ear-l{animation:none;transform:rotate(-16deg) translateY(3px)}
+.cat-stage[data-mood=sad] .cat-ear-r{animation:none;transform:rotate(16deg) translateY(3px)}
+.cat-stage[data-mood=sleep] .cat-ear-l{animation:none;transform:rotate(-8deg)}
+.cat-stage[data-mood=sleep] .cat-ear-r{animation:none;transform:rotate(8deg)}
+.cat-stage[data-mood=surprised] .cat-ear-l{animation:none;transform:rotate(7deg) scale(1.06)}
+.cat-stage[data-mood=surprised] .cat-ear-r{animation:none;transform:rotate(-7deg) scale(1.06)}
+.cat-stage[data-mood=sleepy] .e-open{transform:scaleY(.5)}
+.cat-stage[data-mood=angry] .e-open{transform:scaleY(.82)}
+.cat-stage[data-mood=surprised] .e-open{transform:scale(1.14)}
+.cat-stage[data-mood=surprised] .pupil{transform-box:fill-box;transform-origin:center;transform:scale(.6)}
+.cat-stage[data-mood=sad] .pupil{transform-box:fill-box;transform-origin:center;transform:scale(1.12)}
+.cat-stage[data-mood=happy] .arm-l{animation:catFlapL .5s ease-in-out infinite alternate}
+.cat-stage[data-mood=happy] .arm-r{animation:catFlapR .5s ease-in-out infinite alternate}
+@keyframes catFlapL{from{transform:rotate(0)}to{transform:rotate(16deg)}}
+@keyframes catFlapR{from{transform:rotate(0)}to{transform:rotate(-16deg)}}
+.cat-stage[data-mood=surprised] .arm-l{transform:rotate(34deg)}
+.cat-stage[data-mood=surprised] .arm-r{transform:rotate(-34deg)}
+.cat-stage[data-mood=purr] .arm-l{animation:catKnead .45s ease-in-out infinite alternate}
+.cat-stage[data-mood=purr] .arm-r{animation:catKnead .45s ease-in-out infinite alternate-reverse}
+@keyframes catKnead{from{transform:translateY(0)}to{transform:translateY(-6px)}}
+.cat-stage[data-mood=wave] .arm-r{animation:catWave .55s ease-in-out infinite}
+@keyframes catWave{0%,100%{transform:rotate(-146deg)}50%{transform:rotate(-112deg)}}
+
+/* acts (one-shot, defined after moods so they win) */
+.cat-stage.act-jump .cat-jumper{animation:catJump .75s cubic-bezier(.3,1.3,.5,1)}
+@keyframes catJump{0%{transform:none}25%{transform:translateY(-28px) scale(.94,1.08)}55%{transform:translateY(0) scale(1.1,.88)}78%{transform:translateY(-6px) scale(.98,1.03)}100%{transform:none}}
+.cat-stage.act-spin .cat-jumper{animation:catSpinJ .9s ease-in-out}
+@keyframes catSpinJ{0%{transform:translateY(0) rotate(0)}35%{transform:translateY(-26px) rotate(150deg) scale(1.06)}70%{transform:translateY(-8px) rotate(300deg)}100%{transform:translateY(0) rotate(360deg)}}
+.cat-stage.act-stretch .cat-jumper{animation:catStretch 1.8s ease-in-out}
+@keyframes catStretch{0%{transform:none}20%{transform:scale(1.1,.88)}55%{transform:scale(.9,1.16) translateY(-2px)}80%{transform:scale(1.04,.97)}100%{transform:none}}
+.cat-stage.act-sneeze .cat-jumper{animation:catSneeze .95s ease-out}
+@keyframes catSneeze{0%{transform:none}30%{transform:scale(1.04,.9)}45%{transform:translateY(-6px) scale(.94,1.1)}100%{transform:none}}
+.cat-stage.act-tilt .cat-head{animation:catTilt 1.6s ease-in-out}
+@keyframes catTilt{0%{transform:rotate(0)}25%,75%{transform:rotate(15deg) translateX(3px)}100%{transform:rotate(0)}}
+.cat-stage.act-yawn .cat-head{animation:catYawnH 2s ease-in-out}
+@keyframes catYawnH{0%,100%{transform:rotate(0) translateY(0)}35%,70%{transform:rotate(-5deg) translateY(-4px)}}
+.cat-stage.act-yawn .m-yawn{transform-box:fill-box;transform-origin:50% 0;animation:catYawnM 2s ease-in-out}
+@keyframes catYawnM{0%{transform:scale(.3)}25%,70%{transform:scale(1)}100%{transform:scale(.3)}}
+.cat-stage.act-lick .cat-head{animation:catLickH 2.7s ease-in-out}
+@keyframes catLickH{0%,100%{transform:rotate(0)}15%,85%{transform:rotate(7deg) translateY(2px)}}
+.cat-stage.act-lick .arm-r{animation:catLick .42s ease-in-out infinite}
+@keyframes catLick{0%,100%{transform:rotate(150deg)}50%{transform:rotate(174deg)}}
+.cat-stage.act-sneeze .cat-head{animation:catSneezeH .95s ease-out}
+@keyframes catSneezeH{0%{transform:none}35%{transform:translateY(5px) rotate(5deg)}55%{transform:translateY(-6px) rotate(-12deg)}100%{transform:none}}
+.cat-stage.act-stretch .arm-l{animation:catArmL 1.8s ease-in-out}
+.cat-stage.act-stretch .arm-r{animation:catArmR 1.8s ease-in-out}
+@keyframes catArmL{0%,100%{transform:rotate(0)}30%,70%{transform:rotate(42deg)}}
+@keyframes catArmR{0%,100%{transform:rotate(0)}30%,70%{transform:rotate(-42deg)}}
+.cat-stage.act-wave .arm-r{animation:catWave .55s ease-in-out infinite}
+.cat-stage.act-wave .cat-tail{animation-duration:.5s}
+.cat-stage.act-look .pupil-g{animation:catLook 2.5s ease-in-out}
+@keyframes catLook{0%,100%{transform:translate(0,0)}20%,40%{transform:translate(-3.6px,-1px)}60%,80%{transform:translate(3.6px,-1.5px)}}
+.cat-stage.act-look .cat-head{animation:catLookH 2.5s ease-in-out}
+@keyframes catLookH{0%,100%{transform:rotate(0)}20%,40%{transform:rotate(-7deg)}60%,80%{transform:rotate(7deg)}}
+.cat-stage.act-eat .m-open{transform-box:fill-box;transform-origin:50% 0;animation:catChomp .36s ease-in-out .8s 5 both}
+@keyframes catChomp{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.35)}}
+
+/* bubble, particles, tag */
+.cat-bubble{position:absolute;left:calc(100% + 4px);top:2px;width:max-content;max-width:min(180px,calc(50vw - 24px - 70px*var(--sz,1)));padding:6px 12px;border-radius:14px 14px 14px 4px;background:var(--card);border:1px solid var(--border2);color:var(--text);font-size:12px;font-weight:600;line-height:1.4;text-align:left;opacity:0;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.25);z-index:5}
+.cat-bubble.show{animation:catBubble var(--bd,3400ms) ease both}
+@keyframes catBubble{0%{opacity:0;transform:translateY(6px) scale(.8)}8%{opacity:1;transform:none}88%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-4px)}}
+.cat-p{position:absolute;pointer-events:none;z-index:4;line-height:1;will-change:transform,opacity;user-select:none}
+.cat-tag{display:inline-flex;align-items:center;gap:6px;padding:3px 12px;border-radius:99px;background:var(--card);border:1px solid var(--border2);font-size:12px;font-weight:700;margin-top:2px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.cat-hint{font-size:11px;color:var(--muted);margin-top:5px}
+@media(prefers-reduced-motion:reduce){
+  .cat-stage .cat-wrap,.cat-stage .cat-mood,.cat-stage .cat-jumper,.cat-stage svg *{animation:none!important}
+}
+
+/* customize panel (right column) */
+#app{transition:padding-right .35s cubic-bezier(.4,0,.2,1)}
+.cp{position:fixed;top:0;right:0;bottom:0;width:min(320px,100vw);z-index:90;background:rgba(13,18,32,.93);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-left:1px solid var(--border2);transform:translateX(104%);transition:transform .38s cubic-bezier(.32,1.15,.4,1);display:flex;flex-direction:column;box-shadow:-18px 0 50px rgba(0,0,0,.35)}
+.light .cp{background:rgba(255,255,255,.95)}
+.cp.open{transform:none}
+.cp-head{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid var(--border)}
+.cp-av{width:42px;height:42px;border-radius:12px;background:rgba(124,58,237,.14);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.cp-title{font-weight:700;font-size:15px}
+.cp-sub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cp-body{flex:1;overflow-y:auto;padding:14px 16px 22px;overscroll-behavior:contain}
+.cp-sec{margin-bottom:18px}
+.cp-t{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.cp-sw{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2px}
+.cp-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border2);cursor:pointer;padding:0;transition:transform .15s,box-shadow .15s;flex-shrink:0}
+.cp-dot:hover{transform:scale(1.12)}
+.cp-dot.on{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--violet);transform:scale(1.08)}
+.cp-pick{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;background:conic-gradient(#f43f5e,#f59e0b,#84cc16,#06b6d4,#6366f1,#d946ef,#f43f5e)}
+.cp-pick input{position:absolute;inset:-8px;width:200%;height:200%;opacity:0;cursor:pointer;border:0;padding:0}
+.cp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.cp-chip{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:var(--r3);border:1.5px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);font-family:var(--font);font-size:11.5px;font-weight:600;cursor:pointer;transition:all .18s;line-height:1.25;text-align:center}
+.light .cp-chip{background:rgba(255,255,255,.7)}
+.cp-chip:hover{border-color:var(--violet);background:rgba(124,58,237,.08);transform:translateY(-1px)}
+.cp-chip.on{border-color:var(--violet);background:rgba(124,58,237,.18);box-shadow:0 0 0 1px var(--violet) inset}
+.cp-ce{font-size:19px;line-height:1.2}
+.cp-row{display:flex;align-items:center;gap:10px}
+.cp-row input[type=range]{flex:1;accent-color:var(--violet)}
+.cp-row span{min-width:42px;text-align:right;font-size:12px;font-weight:700;color:var(--muted)}
+.cp-tog{display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 12px;border-radius:var(--r3);border:1.5px solid var(--border);background:transparent;color:var(--text);font:600 13px var(--font);cursor:pointer;margin-bottom:7px}
+.cp-tog i{width:36px;height:20px;border-radius:99px;background:var(--border2);position:relative;transition:background .2s;flex-shrink:0}
+.cp-tog i::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s}
+.cp-tog[aria-checked=true] i{background:var(--violet)}
+.cp-tog[aria-checked=true] i::after{transform:translateX(16px)}
+.cp-tips{font-size:12px;color:var(--muted);line-height:1.65;padding:10px 12px;border-radius:var(--r3);border:1px dashed var(--border2)}
+@media(min-width:701px){html.cat-cp-open #app{padding-right:336px}}
+@media(max-width:700px){
+  .cp{top:auto;left:0;right:0;width:auto;max-height:58vh;border-left:0;border-top:1px solid var(--border2);border-radius:20px 20px 0 0;transform:translateY(104%);box-shadow:0 -14px 40px rgba(0,0,0,.35)}
+  .cp.open{transform:none}
+}
+
+/* ── v3: tai, đuôi nhiều khớp, ăn, lớn lên, menu ── */
+.ear-fl{transform-origin:68px 52px;transition:transform .22s ease-out}
+.ear-fr{transform-origin:132px 52px;transition:transform .22s ease-out}
+.cat-ear-l,.cat-ear-r{transition:transform .2s ease-out}
+.tj{animation:tjWave 2.2s ease-in-out infinite}
+@keyframes tjWave{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(2.2deg)}}
+.tail-o,.tail-i,.tail-r{stroke-linejoin:round}
+.cat-stage[data-mood=sad] .tj,.cat-stage[data-mood=sleep] .tj{animation-duration:4.6s}
+.cat-stage[data-mood=happy] .tj,.cat-stage[data-mood=love] .tj,.cat-stage[data-mood=angry] .tj{animation-duration:.7s}
+.cat-stage.act-tailwag .cat-tail{animation:catTailWag .5s ease-in-out infinite}
+@keyframes catTailWag{0%,100%{transform:rotate(-22deg)}50%{transform:rotate(26deg)}}
+.cat-stage.act-tailwag .tj{animation-duration:.5s}
+.cat-stage.act-tailcurl .cat-tail{animation:none}
+.cat-stage.act-tailcurl .tj{animation:tjCurl 2.4s ease-in-out 0s!important}
+@keyframes tjCurl{0%,100%{transform:rotate(0)}25%,70%{transform:rotate(-11deg)}}
+.cat-stage.act-earflick .cat-ear-l{animation:catFlickL 1.25s ease-in-out}
+.cat-stage.act-earflick .cat-ear-r{animation:catFlickR 1.25s ease-in-out .15s}
+@keyframes catFlickL{0%,100%{transform:rotate(0)}15%{transform:rotate(-20deg)}30%{transform:rotate(6deg)}45%{transform:rotate(-14deg)}60%{transform:rotate(3deg)}}
+@keyframes catFlickR{0%,100%{transform:rotate(0)}15%{transform:rotate(20deg)}30%{transform:rotate(-6deg)}45%{transform:rotate(14deg)}60%{transform:rotate(-3deg)}}
+.cat-stage.act-earperk .cat-ear-l{animation:catPerkL 1.8s ease-in-out}
+.cat-stage.act-earperk .cat-ear-r{animation:catPerkR 1.8s ease-in-out}
+@keyframes catPerkL{0%,100%{transform:none}20%,75%{transform:rotate(8deg) scale(1.1,1.16) translateY(-3px)}}
+@keyframes catPerkR{0%,100%{transform:none}20%,75%{transform:rotate(-8deg) scale(1.1,1.16) translateY(-3px)}}
+/* ăn */
+.cat-stage.act-eat .cat-head{animation:catEatH .36s ease-in-out .8s 5 both}
+@keyframes catEatH{0%,100%{transform:rotate(-4deg) translateY(2px)}50%{transform:rotate(-9deg) translateY(6px)}}
+.cat-stage.act-eat .cat-jumper{animation:catEatB 2.9s ease-in-out}
+@keyframes catEatB{0%{transform:none}25%,90%{transform:scale(1.02,.97) translateX(-3px)}100%{transform:none}}
+.cat-stage.act-eat .arm-l{animation:catArmL 2.9s ease-in-out;}
+.cat-stage.act-eat .cat-ear-l,.cat-stage.act-eat .cat-ear-r{animation:none;transform:none}
+.cat-stage.act-no .cat-head{animation:catNo 1.1s ease-in-out}
+@keyframes catNo{0%,100%{transform:rotate(0)}20%{transform:rotate(-12deg)}45%{transform:rotate(12deg)}70%{transform:rotate(-8deg)}}
+.cat-stage.act-no .m-sad{display:inline}
+.cat-stage.act-no .cat-jumper{animation:catSneeze 1.1s ease-out}
+.cat-stage.act-grumble .cat-jumper{animation:catGrumble 1.65s ease-in-out}
+@keyframes catGrumble{0%,100%{transform:none}20%,60%{transform:scale(1.03,.96)}40%,80%{transform:scale(.98,1.02)}}
+.cat-stage.act-grumble .cat-head{animation:catLickH 1.65s ease-in-out}
+.cat-stage.act-grumble .m-smile{display:none}
+.cat-stage.act-grumble .m-sad{display:inline}
+/* độ no -> thân tròn / gầy */
+.body-e{transform-box:fill-box;transform-origin:50% 100%;transition:transform .6s ease}
+.cat-stage[data-full=hi] .body-e{transform:scale(1.08,1.06)}
+.cat-stage[data-full=lo] .body-e{transform:scale(.95,.96)}
+.cat-stage[data-full=hi] .cheek{opacity:.6}
+/* menu bấm chuột trái */
+.cat-menu{position:absolute;left:50%;top:66%;z-index:8;display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:16px;background:var(--card);border:1px solid var(--border2);box-shadow:0 10px 30px rgba(0,0,0,.35);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;pointer-events:none;transform:translate(-50%,8px) scale(.85);transform-origin:50% 0;transition:opacity .18s,transform .22s cubic-bezier(.3,1.5,.5,1);width:max-content;cursor:default}
+.cat-menu.show{opacity:1;pointer-events:auto;transform:translate(-50%,0) scale(1)}
+.cat-menu button{display:flex;align-items:center;justify-content:center;gap:7px;padding:8px 14px;border-radius:11px;border:1.5px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font:700 13px var(--font);cursor:pointer;transition:all .15s}
+.cat-menu button:hover{border-color:var(--violet);background:rgba(124,58,237,.16);transform:translateY(-1px)}
+.cat-menu button span:first-child{font-size:18px}
+.cat-menu-t{font-size:11px;font-weight:700;color:var(--muted);text-align:center;letter-spacing:.04em}
+.cat-menu .fg{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.cat-menu .fd{flex-direction:column;gap:1px;padding:7px 12px}
+.cat-menu .bk{padding:5px 10px;font-size:12px;font-weight:600;color:var(--muted)}
+.cat-tag-e{font-size:14px}
+.cat-lv{padding:1px 8px;border-radius:99px;background:rgba(124,58,237,.18);color:var(--violet);font-size:11px;font-weight:800}
+.cat-gear{border:0;background:transparent;cursor:pointer;font-size:13px;padding:0 0 0 2px;line-height:1;opacity:.7;transition:transform .3s,opacity .2s}
+.cat-gear:hover{opacity:1;transform:rotate(60deg)}
+.cat-xp{width:120px;height:5px;border-radius:99px;background:var(--border);margin-top:6px;overflow:hidden}
+.cat-xp i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#7c3aed,#06b6d4);transition:width .6s ease}
+.cp-lv{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;margin-bottom:5px}
+.cp-lv span{color:var(--muted);font-weight:600}
+.cp-bar{height:8px;border-radius:99px;background:var(--border);overflow:hidden}
+.cp-bar i{display:block;height:100%;width:0;border-radius:99px;transition:width .5s ease}
+.cp-bar.xp i{background:linear-gradient(90deg,#7c3aed,#06b6d4)}
+.cp-bar.fl i{background:linear-gradient(90deg,#f59e0b,#f97316)}
+@media(prefers-reduced-motion:reduce){.tj,.cat-stage svg *{animation:none!important}}
+
+/* sigma walk */
+.m-flat,.shades{display:none}
+.cat-stage.act-sigma[data-mood] .m-flat,.cat-stage.act-sigma .shades{display:inline}
+.cat-stage.act-sigma .cheek{opacity:.15}
+.cat-stage.act-sigma .cat-jumper{animation:catSigma 3.8s ease-in-out}
+@keyframes catSigma{0%{transform:none}12%{transform:translateX(-4px) rotate(-1.5deg)}30%{transform:translateX(-16px) translateY(-2px) rotate(-2deg)}42%{transform:translateX(-16px) translateY(0)}58%{transform:translateX(16px) translateY(-2px) rotate(2deg)}72%{transform:translateX(16px) translateY(0)}90%{transform:translateX(3px)}100%{transform:none}}
+.cat-stage.act-sigma .cat-head{animation:catSigmaH 3.8s ease-in-out}
+@keyframes catSigmaH{0%,100%{transform:none}12%,88%{transform:rotate(-5deg) translateY(-4px)}}
+.cat-stage.act-sigma .arm-l{animation:catKnead .95s ease-in-out infinite alternate}
+.cat-stage.act-sigma .arm-r{animation:catKnead .95s ease-in-out infinite alternate-reverse}
+.cat-stage.act-sigma .cat-tail{animation:none;transform:rotate(-4deg)}
+.cat-stage.act-sigma .cat-ear-l,.cat-stage.act-sigma .cat-ear-r{animation:none;transform:none}
+
+/* clap meme: đứng bằng 2 chân sau, cười lộ răng, vỗ tay */
+.m-grin{display:none}
+.cat-stage.act-clap[data-mood] .e-happy,.cat-stage.act-clap[data-mood] .m-grin{display:inline}
+.cat-stage.act-clap .cheek{opacity:.5}
+.cat-stage.act-clap .cat-jumper{animation:catClapUp 4.4s ease-in-out}
+@keyframes catClapUp{0%{transform:none}9%,91%{transform:translateY(-7px) scale(.93,1.13)}100%{transform:none}}
+.cat-stage.act-clap .cat-mood{animation:catClapBounce .4s ease-in-out .4s 8}
+@keyframes catClapBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.cat-stage.act-clap .cat-head{animation:catClapH 4.4s ease-in-out}
+@keyframes catClapH{0%,100%{transform:none}9%,91%{transform:rotate(-3deg) translateY(-3px)}}
+.cat-stage.act-clap .arm-l{animation:catClapL .4s ease-in-out .4s 8}
+.cat-stage.act-clap .arm-r{animation:catClapR .4s ease-in-out .4s 8}
+@keyframes catClapL{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(-44deg)}}
+@keyframes catClapR{0%,100%{transform:rotate(12deg)}50%{transform:rotate(44deg)}}
+.cat-stage.act-clap .cat-tail{animation-duration:.4s}
+.cat-stage.act-clap .cat-ear-l,.cat-stage.act-clap .cat-ear-r{animation:none;transform:none}
 </style>
 </head>
 <body>
@@ -532,7 +833,9 @@ const DEFAULT_QS=[
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W=0,H=0,dpr=1,particles=[],shoots=[],nextShoot=1500;
-  const mouse={x:-9999,y:-9999,sx:-9999,sy:-9999,on:false};
+  const mouse={x:-9999,y:-9999,sx:-9999,sy:-9999,on:false,pull:false,pullUntil:0};
+  const waves=[];
+  const _noBg=t=>t&&t.closest&&t.closest('.cat-stage,.cp,input,textarea,select,[contenteditable],.rte-field,.modal,#modal-bg');
   const orbHues=[265,190,160,330];
   const orbs=orbHues.map(h=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:180+Math.random()*140,h}));
   function newParticle(){
@@ -553,15 +856,34 @@ const DEFAULT_QS=[
   resize();window.addEventListener('resize',resize);
   window.addEventListener('pointermove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;if(!mouse.on){mouse.on=true;mouse.sx=mouse.x;mouse.sy=mouse.y;}},{passive:true});
   window.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')mouse.on=false;},{passive:true});
-  document.addEventListener('mouseleave',()=>{mouse.on=false;});
+  document.addEventListener('mouseleave',()=>{mouse.on=false;mouse.pull=false;});
   window.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button===1)return;
     mouse.x=e.clientX;mouse.y=e.clientY;mouse.on=true;
     if(mouse.sx<-999){mouse.sx=mouse.x;mouse.sy=mouse.y;}
+    if(e.pointerType==='mouse'&&e.button===2){
+      /* chuột phải: HÚT các hạt về con trỏ (giữ để hút liên tục) */
+      if(_noBg(e.target))return;
+      mouse.pull=true;mouse.pullUntil=performance.now()+1100;
+      waves.push({x:e.clientX,y:e.clientY,t:0,pull:true});
+      particles.forEach(p=>{
+        const dx=e.clientX-p.x,dy=e.clientY-p.y,d=Math.hypot(dx,dy);
+        if(d<360&&d>1){const f=(1-d/360)*5;p.vx+=dx/d*f;p.vy+=dy/d*f;}
+      });
+      return;
+    }
+    /* chuột trái / chạm: ĐẨY các hạt ra */
+    waves.push({x:e.clientX,y:e.clientY,t:0,pull:false});
     particles.forEach(p=>{
       const dx=p.x-e.clientX,dy=p.y-e.clientY,d=Math.hypot(dx,dy);
       if(d<280&&d>1){const f=(1-d/280)*7;p.vx+=dx/d*f;p.vy+=dy/d*f;}
     });
   },{passive:true});
+  const _endPull=()=>{mouse.pull=false;};
+  window.addEventListener('pointerup',e=>{if(e.button===2)_endPull();},{passive:true});
+  window.addEventListener('pointercancel',_endPull,{passive:true});
+  window.addEventListener('blur',_endPull);
+  window.addEventListener('contextmenu',e=>{if(e.defaultPrevented)return;const t=e.target;if(t&&t.closest&&t.closest('input,textarea,[contenteditable],.rte-field'))return;e.preventDefault();});
   function spawnShoot(){
     const fromLeft=Math.random()<.5;
     const sp=9+Math.random()*6, ang=(Math.PI/180)*(25+Math.random()*20);
@@ -578,6 +900,25 @@ const DEFAULT_QS=[
       g.addColorStop(0,`hsla(${hs},100%,60%,${isDark?.13:.07})`);g.addColorStop(1,`hsla(${hs},100%,60%,0)`);
       ctx.fillStyle=g;ctx.fillRect(mouse.sx-280,mouse.sy-280,560,560);
     }
+    const pulling=mouse.pull||now<mouse.pullUntil;
+    if(pulling&&mouse.on){
+      const t=(now%900)/900;
+      for(let k=0;k<3;k++){
+        const u=(t+k/3)%1,rr=150*(1-u)+10;
+        ctx.beginPath();ctx.arc(mouse.x,mouse.y,rr,0,Math.PI*2);
+        ctx.strokeStyle=`hsla(${hs},100%,${isDark?72:48}%,${(isDark?.5:.35)*u})`;ctx.lineWidth=1.6;ctx.stroke();
+      }
+      const g2=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,70);
+      g2.addColorStop(0,`hsla(${hs},100%,70%,${isDark?.35:.2})`);g2.addColorStop(1,`hsla(${hs},100%,70%,0)`);
+      ctx.fillStyle=g2;ctx.fillRect(mouse.x-70,mouse.y-70,140,140);
+    }
+    for(let i=waves.length-1;i>=0;i--){
+      const w=waves[i];w.t+=.035;
+      if(w.t>=1){waves.splice(i,1);continue;}
+      const rr=w.pull?170*(1-w.t):200*w.t+8,al=(isDark?.55:.35)*(w.pull?w.t:1-w.t);
+      ctx.beginPath();ctx.arc(w.x,w.y,Math.max(rr,2),0,Math.PI*2);
+      ctx.strokeStyle=`hsla(${hs},100%,${isDark?72:48}%,${al})`;ctx.lineWidth=2;ctx.stroke();
+    }
     orbs.forEach(o=>{
       o.x+=o.vx;o.y+=o.vy;
       if(o.x<-o.r)o.x=W+o.r;if(o.x>W+o.r)o.x=-o.r;
@@ -588,11 +929,22 @@ const DEFAULT_QS=[
       ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
     });
     for(const p of particles){
-      if(mouse.on){
+      let relax=.025;
+      if(pulling&&mouse.on){
+        /* hút: kéo về con trỏ, xoáy nhẹ, chậm dần khi tới gần */
+        const dx=mouse.x-p.x,dy=mouse.y-p.y,d=Math.hypot(dx,dy);
+        if(d<380&&d>.5){
+          const f=(1-d/380)*.9;
+          p.vx+=dx/d*f+(-dy/d)*f*.18;p.vy+=dy/d*f+(dx/d)*f*.18;
+          if(d<70){p.vx*=.88;p.vy*=.88;}
+          const sp=Math.hypot(p.vx,p.vy);if(sp>13){p.vx*=13/sp;p.vy*=13/sp;}
+          relax=.004;
+        }
+      }else if(mouse.on){
         const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);
         if(d<130&&d>.5){const f=(1-d/130)*.55;p.vx+=dx/d*f;p.vy+=dy/d*f;}
       }
-      p.vx+=(p.bvx-p.vx)*.025;p.vy+=(p.bvy-p.vy)*.025;
+      p.vx+=(p.bvx-p.vx)*relax;p.vy+=(p.bvy-p.vy)*relax;
       p.x+=p.vx;p.y+=p.vy;
       if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
       const tw=.6+.4*Math.sin(now*p.ts+p.tw);
@@ -616,9 +968,9 @@ const DEFAULT_QS=[
       }
       if(mouse.on){
         const dx=a.x-mouse.x,dy=a.y-mouse.y,d=Math.hypot(dx,dy);
-        if(d<160){
+        if(d<(pulling?240:160)){
           ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(mouse.x,mouse.y);
-          ctx.strokeStyle=`hsla(${hs},100%,${isDark?68:45}%,${(isDark?.45:.3)*(1-d/160)})`;ctx.lineWidth=.9;ctx.stroke();ctx.lineWidth=.7;
+          ctx.strokeStyle=`hsla(${hs},100%,${isDark?68:45}%,${(isDark?.45:.3)*(1-d/(pulling?240:160))})`;ctx.lineWidth=.9;ctx.stroke();ctx.lineWidth=.7;
         }
       }
     }
@@ -642,68 +994,715 @@ const DEFAULT_QS=[
   requestAnimationFrame(draw);
 })();
 
-/* ── CAT MASCOT ── */
+/* ── CAT MASCOT v3 ── */
+const MOODS={
+  idle:{e:'😺',n:'Bình thường',say:['Meo~ 🐾','Meo meo! Chơi quiz nào!','Hôm nay đúng hết nhé!','Gừ gừ… tập trung nào!']},
+  happy:{e:'😸',n:'Vui vẻ',say:['Vui quá đi~ ✨','Yay! Meo meo!','Hôm nay là ngày đẹp trời!'],v:'meow'},
+  sleepy:{e:'😪',n:'Buồn ngủ',say:['Ngáp… buồn ngủ quá 🥱','Cho mình chợp mắt xíu…'],v:'yawn'},
+  sleep:{e:'😴',n:'Đang ngủ',say:['Zzz… 💤','Khò khò… 💤']},
+  angry:{e:'😾',n:'Giận dỗi',say:['Gừ! Đừng chọc nữa! 💢','Hừmmm! 😾'],v:'hiss'},
+  sad:{e:'😿',n:'Buồn',say:['Huhu… 💧','Chơi với mình đi mà…'],v:'sad'},
+  love:{e:'😻',n:'Yêu thương',say:['Thích bạn nhất! 💕','Mê quá đi~ 💖'],v:'mew'},
+  dizzy:{e:'😵‍💫',n:'Chóng mặt',say:['Quay mòng mòng… 😵‍💫','Trời đất xoay vòng vòng~']},
+  surprised:{e:'🙀',n:'Giật mình',say:['Meo?! 🙀','Hả?! Cái gì vậy!'],v:'squeak'},
+  wave:{e:'👋',n:'Vẫy tay',say:['Xin chào! 👋','Chào bạn nha~'],v:'mew'},
+  purr:{e:'😌',n:'Gừ gừ',say:['Purrrr… 💜','Gừ gừ… sướng quá~']}
+};
+const ACTS={
+  jump:{dur:760,say:['Meo! 🐾','Hop hop!','Nhảy nè~'],v:'meow',fx:['heart',3]},
+  wave:{dur:2700,say:()=>catHello(),v:'mew'},
+  yawn:{dur:2000,say:['Ngáp… 🥱','Buồn ngủ ghê…','Hôm nay học đủ chưa nè?'],v:'yawn'},
+  lick:{dur:2700,say:['Liếm liếm… 🧼','Chải lông chút nha~']},
+  stretch:{dur:1800,say:['Vươn vai nào~ 💪','Mmmh… dễ chịu!'],v:'mew'},
+  sneeze:{dur:950,say:['Hắt xì! 🤧','Atchoo!'],v:'sneeze',fx:['drop',3]},
+  spin:{dur:950,say:['Xoay xoay~ 🌀','Wheee!'],v:'mew',fx:['star',6]},
+  tilt:{dur:1700,say:['Hử? 🤔','Ơ… cái gì vậy nhỉ?'],v:'mew'},
+  look:{dur:2500,say:['Gì kia nhỉ? 👀','Ơ, có gì đó…']},
+  tailwag:{dur:2600,say:['Vẫy đuôi~ 🐾','Đuôi mình xinh không?'],v:'mew'},
+  tailcurl:{dur:2400,say:['Đuôi xoắn xoắn nè~ ➰','Cuộn cuộn~']},
+  earflick:{dur:1250,say:['Tai mình nhạy lắm đó 👂']},
+  earperk:{dur:1800,say:['Mình nghe thấy gì đó… 👂','Vểnh tai lên nghe ngóng~']},
+  sigma:{dur:3800,say:['Sigma. 🗿','Mèo sigma không cần ai… trừ cá 🐟','Bình tĩnh. Tập trung. Sigma. 😎','Grindset mode: ON 🗿'],v:'sigma',fx:['moai',2]},
+  clap:{dur:4400,say:['Vỗ tay nào! 👏','Bravo bravo! 👏👏','Giỏi quá đi~ 👏','Đỉnh của chóp! 👏'],v:'clap',fx:['clap',3]},
+  eat:{dur:2900},
+  no:{dur:1100},
+  grumble:{dur:1650,say:['Ọt ọt… đói bụng quá 🐟','Bụng mình kêu rồi nè, cho mình ăn đi~','Đói quá… cho mình miếng cá đi 😿']}
+};
+const AUTO_ACTS=['clap','sigma','lick','yawn','stretch','tilt','look','sneeze','wave','spin','look','lick','tilt','tailwag','tailcurl','earflick','earperk','earflick','tailwag'];
+const CLICK_ACTS=['jump','jump','jump','spin','wave','tilt'];
+const ACC_LIST=[['none','Không','🚫'],['bow','Nơ','🎀'],['hat','Mũ tiệc','🎉'],['glasses','Kính','👓'],['scarf','Khăn','🧣'],['crown','Vương miện','👑']];
+const FUR_SW=[['#fbbf24','Cam vàng'],['#f97316','Cam đậm'],['#f8fafc','Trắng'],['#cbd5e1','Xám nhạt'],['#64748b','Xám'],['#374151','Đen'],['#f5deb3','Kem'],['#a16207','Nâu'],['#f9a8d4','Hồng'],['#c4b5fd','Tím'],['#6ee7b7','Bạc hà']];
+const EYE_SW=[['#1f2937','Đen'],['#2563eb','Xanh dương'],['#16a34a','Xanh lá'],['#d97706','Hổ phách'],['#7c3aed','Tím'],['#db2777','Hồng']];
+const ACC_SW=[['#ec4899','Hồng'],['#7c3aed','Tím'],['#06b6d4','Xanh ngọc'],['#f59e0b','Vàng'],['#ef4444','Đỏ'],['#10b981','Lục']];
+const GENDERS=[['male','Đực','♂️'],['female','Cái','♀️']];
+const PATS=[['none','Trơn','⚪'],['tabby','Vằn','🐯'],['patch','Đốm','🐄']];
+const ACTS_UI=[['jump','Nhảy','🦘'],['wave','Vẫy tay','👋'],['yawn','Ngáp','🥱'],['lick','Liếm chân','🧼'],['stretch','Vươn vai','💪'],['sneeze','Hắt xì','🤧'],['spin','Xoay vòng','🌀'],['tilt','Nghiêng đầu','🤔'],['look','Nhìn quanh','👀'],['tailwag','Vẫy đuôi','〰️'],['tailcurl','Cuộn đuôi','➰'],['earflick','Giật tai','👂'],['sigma','Sigma walk','😎'],['clap','Vỗ tay meme','👏'],['earperk','Vểnh tai','🐇']];
+const FX={heart:['❤️','💖','💗','💕'],star:['⭐','✨','🌟'],zzz:['💤','Z','z'],anger:['💢'],note:['♪','♫'],drop:['💧'],dizzy:['💫','⭐'],exc:['❗'],crumb:['•','✦','∙'],moai:['🗿'],clap:['👏']};
+
+/* ── Lớn lên khi ăn ── */
+const LV=[{x:0,s:.8,n:'Mèo con'},{x:30,s:.92,n:'Mèo nhỏ'},{x:80,s:1.04,n:'Mèo choai'},{x:150,s:1.16,n:'Mèo lớn'},{x:250,s:1.28,n:'Mèo mập'},{x:400,s:1.4,n:'Mèo béo ú'}];
+const FOODS={
+  fish:{e:'🐟',n:'Cá',xp:8,f:22,c:'#fcd34d',say:['Cá! Cá! Ngon quá đi 🐟','Nom nom nom 🐟'],done:['Cá ngon quá, cảm ơn nha~ 😻','Meo meo! Thêm cá nữa đi 🐟']},
+  milk:{e:'🥛',n:'Sữa',xp:5,f:14,c:'#f8fafc',say:['Sữa ơi~ Lap lap lap 🥛','Mát quá, ngon ghê! 🥛'],done:['Ria mép dính sữa rồi nè 🥛','Ngon quá~ cảm ơn bạn! 💕']},
+  chicken:{e:'🍗',n:'Gà',xp:14,f:34,c:'#fb923c',say:['Đùi gà!! Mình thích lắm 🍗','Gặm gặm gặm 🍗'],done:['No căng bụng luôn! 😻','Món này đỉnh thật sự 🍗']},
+  cake:{e:'🍰',n:'Bánh',xp:10,f:26,c:'#f9a8d4',say:['Bánh ngọt! Yummy 🍰','Ngọt ngào quá~ 🍰'],done:['Ngọt quá, vui cả ngày~ 💖','Cảm ơn bạn nhiều lắm! 🍰']}
+};
+const FULL_LINES=['Mình no căng bụng rồi, không ăn nổi nữa 🤰','No rồi no rồi! Đợi mình tiêu hóa đã nha 😵','Ọe… cho mình nghỉ xíu, no quá! 🙅'];
+function catLevel(){let l=0;for(let i=0;i<LV.length;i++)if(CAT.xp>=LV[i].x)l=i;return l;}
+function catProg(){const l=catLevel(),n=LV[l+1];return n?(CAT.xp-LV[l].x)/(n.x-LV[l].x):1;}
+function catSize(){const l=catLevel(),n=LV[l+1];return n?LV[l].s+(n.s-LV[l].s)*catProg():LV[l].s;}
+
+/* ── Lời chào theo buổi + ghi chú ── */
+function catPart(){
+  const h=new Date().getHours();
+  if(h>=5&&h<11)return['sáng','☀️'];
+  if(h>=11&&h<13)return['trưa','🍚'];
+  if(h>=13&&h<18)return['chiều','🌤️'];
+  if(h>=18&&h<22)return['tối','🌙'];
+  return['khuya','🌌'];
+}
+function catHello(){const p=catPart();return p[0]==='khuya'?'Khuya rồi, chào bạn nha! 👋':'Chào buổi '+p[0]+'! 👋';}
+function catGreeting(){
+  const p=catPart(),n=CAT.name;
+  if(p[0]==='sáng')return{t:'Chào buổi sáng! ☀️ '+n+' chúc bạn một ngày học thật vui~',m:'happy'};
+  if(p[0]==='trưa')return{t:'Chào buổi trưa! 🍚 Bạn ăn cơm chưa? Học xong nhớ nghỉ trưa nha~',m:'idle'};
+  if(p[0]==='chiều')return{t:'Chào buổi chiều! 🌤️ Làm vài câu quiz cho tỉnh táo nào~',m:'idle'};
+  if(p[0]==='tối')return{t:'Chào buổi tối! 🌙 Ôn bài chút rồi nghỉ ngơi nha~',m:'idle'};
+  return{t:'Khuya rồi mà còn học à? 🌌 Nhớ ngủ sớm nha, '+n+' buồn ngủ lắm rồi 🥱',m:'sleepy'};
+}
+function catTimeNotes(){
+  const p=catPart()[0],d=new Date().getDay(),a=[];
+  if(p==='sáng')a.push('Sáng sớm là lúc nhớ bài nhất đó! 🌅','Uống ly nước rồi học tiếp nha 💧','Ăn sáng chưa bạn ơi? 🥐');
+  if(p==='trưa')a.push('Ăn trưa xong nhớ nghỉ chút nha 🍱','Trưa nắng, nhớ uống nhiều nước nhé ☀️');
+  if(p==='chiều')a.push('Chiều rồi, giãn cơ cổ một chút nè 🙆','Cố lên, còn vài câu nữa thôi! 💪','Chiều chiều hay buồn ngủ, học vài câu cho tỉnh nè ☕');
+  if(p==='tối')a.push('Tối rồi, đừng thức quá khuya nha 🌙','Ôn xong thì đi ngủ sớm nhé 😴','Tối học bài, ngủ ngon dễ nhớ lâu hơn đó 🌟');
+  if(p==='khuya')a.push('Khuya lắm rồi… ngủ thôi bạn ơi 💤','Mắt mình díp lại rồi nè 🥱','Thức khuya là hại da lắm đó nha 😿');
+  if(d===1)a.push('Đầu tuần rồi, cố lên nhé! 💪');
+  if(d===5)a.push('Thứ sáu rồi, sắp nghỉ cuối tuần! 🎉');
+  if(d===0||d===6)a.push('Cuối tuần mà vẫn học, bạn siêu luôn! 🌟');
+  return a;
+}
+const CAT_TIPS=['Học 25 phút, nghỉ 5 phút nha 🍅','Sai cũng không sao, lần sau đúng là được! 💜','Chuỗi đúng liên tiếp sẽ cho điểm thưởng đó 🔥','Nhớ uống nước đều đều nhé 💧','Bấm chuột phải vào mình để đổi màu lông 🎨','Giữ chuột lên mình để được vuốt ve 😽','Thử mặc cho mình cái mũ tiệc đi 🎉','Chọc mình nhiều quá là chóng mặt đó nha 😵‍💫','Cho mình ăn là mình lớn lên đó, thử đi! 🐟','Ngồi thẳng lưng lên nào, đừng gù nha 🪑','Ôn bài đều mỗi ngày hơn học dồn nha 📚','Bật âm thanh lên để nghe mình kêu meo 🔊','Đọc câu hỏi kỹ trước khi chọn đáp án nha 👀','Bí quá thì dùng gợi ý, không ai cười đâu 😸','Chuột phải lên nền: hạt sáng bị hút vào đó, thử xem! ✨','Chuột trái lên nền: hạt sáng bị đẩy ra nè 💥','Mình mập lên thì đáng yêu hơn, đúng không? 🐱','Hít thở sâu một cái rồi làm bài tiếp nào 🌿','Mỗi ngày tiến bộ một chút là giỏi lắm rồi 🌱','Nghỉ mắt 20 giây, nhìn ra xa một chút nha 👁️'];
+const HOVER_LINES=['Ơ, bạn định làm gì đó? 👀','Meo? Bạn đang nhìn mình hả? 😳','Lại gần chút đi~ 🐾','Bấm vào mình để cho ăn hoặc chọc nè!','Chuột phải vào mình để chỉnh áo quần 🎀','Gãi cằm cho mình đi… à nhầm, giữ chuột á 😽'];
+function catStreakNote(){try{if(typeof S!=='undefined'&&S.bestStreak>0)return'Chuỗi đúng cao nhất của bạn là '+S.bestStreak+' 🔥 Phá kỷ lục nha!';}catch(e){}return null;}
+function catHungerNotes(){return['Bụng mình hơi trống rồi nè… 🐟','Cho mình ăn chút gì đi, bạn ơi~ 🍗','Mình thèm sữa quá 🥛'];}
+
+/* ── Cấu hình + lưu trữ ── */
+const CAT_DEF={fur:'#fbbf24',eye:'#1f2937',acc:'#ec4899',pat:'none',accessory:'none',gender:'male',name:'Mochi',auto:true,sound:true,notes:true,xp:0,full:55,fed:0,ts:0};
+const CAT=Object.assign({mood:'idle',_act:null,_actT:0,_clicks:[],_holding:false,_down:null,_holdT:0,_prev:null,_tmpT:0,_nextAct:Date.now()+6000,_nextTip:Date.now()+22000,_nextHungry:Date.now()+30000,_last:Date.now(),_autoSlept:false,_sleepAt:0,_tick:0,_purr:null,_intro:0,_inited:false,_sayAt:0,_ptr:'mouse',_menuOn:false,_menuT:0,_eating:false,_decayAt:Date.now()},CAT_DEF);
+(function(){
+  try{const s=JSON.parse(localStorage.getItem('cat_cfg')||'null');if(s&&typeof s==='object'){for(const k in CAT_DEF){if(s[k]!==undefined&&typeof s[k]===typeof CAT_DEF[k])CAT[k]=s[k];}if(s.gender===undefined&&CAT.accessory==='bow')CAT.accessory='none';}}catch(e){}
+  const hx=/^#[0-9a-f]{6}$/i;
+  ['fur','eye','acc'].forEach(k=>{if(!hx.test(CAT[k]))CAT[k]=CAT_DEF[k];CAT[k]=CAT[k].toLowerCase();});
+  if(!PATS.some(p=>p[0]===CAT.pat))CAT.pat='none';
+  if(!ACC_LIST.some(a=>a[0]===CAT.accessory))CAT.accessory='none';
+  if(CAT.gender!=='female')CAT.gender='male';
+  CAT.name=String(CAT.name||'Mochi').slice(0,14);
+  CAT.xp=Math.max(0,Math.min(100000,+CAT.xp||0));
+  CAT.full=Math.max(0,Math.min(100,+CAT.full||0));
+  if(CAT.ts>0){const mins=(Date.now()-CAT.ts)/60000;if(mins>0&&mins<60*24*30)CAT.full=Math.max(0,CAT.full-mins);}
+})();
+function catSave(){try{const o={};for(const k in CAT_DEF)o[k]=CAT[k];o.ts=Date.now();localStorage.setItem('cat_cfg',JSON.stringify(o));}catch(e){}}
+
+/* ── Màu ── */
+function _h2r(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];}
+function _r2h(r,g,b){return'#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');}
+function _mix(a,b,t){const x=_h2r(a),y=_h2r(b);return _r2h(x[0]+(y[0]-x[0])*t,x[1]+(y[1]-x[1])*t,x[2]+(y[2]-x[2])*t);}
+function _lum(h){const c=_h2r(h);return(.2126*c[0]+.7152*c[1]+.0722*c[2])/255;}
+function catStyle(){
+  const f=CAT.fur,l=_lum(f),dk=l<.3;
+  const fd=dk?_mix(f,'#ffffff',.4):_mix(f,'#2a1305',.5);
+  return'--fur:'+f+';--fur-d:'+fd+';--belly:'+_mix(f,'#ffffff',.62)+';--ear:'+_mix(f,'#f472b6',.6)+';--eye:'+CAT.eye+';--acc:'+CAT.acc+';--acc-d:'+_mix(CAT.acc,'#000000',.4)+';--ink:'+(dk?'#f1f5f9':'#1f2937')+';--patch:'+(l>.75?'#f59e0b':(dk?'#f1f5f9':'#fffaf0'))+';--sz:'+catSize().toFixed(3);
+}
+function catFullState(){return CAT.full>=80?'hi':(CAT.full<=18?'lo':'mid');}
+
+/* ── Âm thanh ── */
+function _noise(d,vol,hp){
+  const n=Math.floor(AC.sampleRate*d),buf=AC.createBuffer(1,n,AC.sampleRate),a=buf.getChannelData(0);
+  for(let i=0;i<n;i++)a[i]=(Math.random()*2-1)*(1-i/n);
+  const s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();
+  s.buffer=buf;f.type='highpass';f.frequency.value=hp||2500;g.gain.value=vol;
+  s.connect(f);f.connect(g);g.connect(AC.destination);s.start();
+}
+function catVoice(k){
+  if(!CAT.sound||!AC)return;
+  try{
+    if(AC.state==='suspended')AC.resume();
+    const t=AC.currentTime,p=.92+Math.random()*.22;
+    const osc=(type,pts,d,vol)=>{
+      const o=AC.createOscillator(),g=AC.createGain();
+      o.type=type;o.connect(g);g.connect(AC.destination);
+      o.frequency.setValueAtTime(pts[0][1]*p,t+pts[0][0]);
+      for(let i=1;i<pts.length;i++)o.frequency.exponentialRampToValueAtTime(pts[i][1]*p,t+pts[i][0]);
+      g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.04);g.gain.exponentialRampToValueAtTime(.001,t+d);
+      o.start(t);o.stop(t+d+.03);
+    };
+    switch(k){
+      case'meow':osc('triangle',[[0,520],[.12,920],[.4,420]],.42,.2);break;
+      case'mew':osc('triangle',[[0,780],[.09,1250],[.26,760]],.28,.16);break;
+      case'squeak':osc('square',[[0,1100],[.08,1900]],.14,.07);break;
+      case'sad':osc('triangle',[[0,640],[.2,520],[.65,300]],.7,.17);break;
+      case'yawn':osc('sine',[[0,330],[.45,560],[1.1,260]],1.2,.14);break;
+      case'hiss':_noise(.5,.12,3000);break;
+      case'sneeze':_noise(.16,.12,1800);osc('triangle',[[.12,900],[.3,500]],.32,.1);break;
+      case'sigma':osc('sine',[[0,150],[.5,58]],.95,.26);osc('triangle',[[.05,300],[.6,110]],.7,.07);break;
+      case'clap':for(let i=0;i<8;i++)setTimeout(()=>{if(!CAT.sound||!AC)return;_noise(.07,.22,1300);_noise(.03,.12,3500);},600+i*400);break;
+      case'munch':_noise(.07,.1,900);osc('triangle',[[0,300],[.06,200]],.09,.12);break;
+    }
+  }catch(e){}
+}
+function catPurrStart(){
+  if(!CAT.sound||!AC)return null;
+  try{
+    if(AC.state==='suspended')AC.resume();
+    const o=AC.createOscillator(),g=AC.createGain(),lfo=AC.createOscillator(),lg=AC.createGain(),f=AC.createBiquadFilter();
+    o.type='sawtooth';o.frequency.value=82;f.type='lowpass';f.frequency.value=380;
+    lfo.type='sine';lfo.frequency.value=24;lg.gain.value=.04;
+    g.gain.value=.001;lfo.connect(lg);lg.connect(g.gain);
+    o.connect(f);f.connect(g);g.connect(AC.destination);
+    g.gain.setTargetAtTime(.06,AC.currentTime,.12);
+    o.start();lfo.start();
+    return()=>{try{g.gain.setTargetAtTime(.0001,AC.currentTime,.08);o.stop(AC.currentTime+.4);lfo.stop(AC.currentTime+.4);}catch(e){}};
+  }catch(e){return null;}
+}
+
+/* ── SVG ── */
+function _spiral(cx,cy,r){let d='M'+cx+' '+cy;for(let a=.3;a<=Math.PI*5;a+=.35){const rr=r*a/(Math.PI*5);d+=' L'+(cx+rr*Math.cos(a)).toFixed(1)+' '+(cy+rr*Math.sin(a)).toFixed(1);}return d;}
+function _heart(cx,cy,s){return'M'+cx+' '+(cy+8*s)+' C'+(cx-14*s)+' '+(cy-2*s)+' '+(cx-10*s)+' '+(cy-13*s)+' '+cx+' '+(cy-6*s)+' C'+(cx+10*s)+' '+(cy-13*s)+' '+(cx+14*s)+' '+(cy-2*s)+' '+cx+' '+(cy+8*s)+'Z';}
+const _TP=[[134,166],[160,172],[179,160],[186,138],[180,116],[166,104]];
+const TAIL_PTS=(function(){
+  const P=[_TP[0]].concat(_TP,[_TP[_TP.length-1]]),out=[_TP[0]],N=3;
+  for(let i=1;i<P.length-2;i++){
+    const p0=P[i-1],p1=P[i],p2=P[i+1],p3=P[i+2];
+    for(let k=1;k<=N;k++){
+      const t=k/N,t2=t*t,t3=t2*t;
+      out.push([0,1].map(c=>.5*((2*p1[c])+(-p0[c]+p2[c])*t+(2*p0[c]-5*p1[c]+4*p2[c]-p3[c])*t2+(-p0[c]+3*p1[c]-3*p2[c]+p3[c])*t3)));
+    }
+  }
+  return out;
+})();
+function _tail(cls){
+  let s='';
+  for(let i=TAIL_PTS.length-2;i>=0;i--){
+    const a=TAIL_PTS[i],b=TAIL_PTS[i+1];
+    s='<g class="tj" style="transform-origin:'+a[0].toFixed(1)+'px '+a[1].toFixed(1)+'px;animation-delay:'+(-(i*.06)).toFixed(2)+'s"><path class="'+cls+'" d="M'+a[0].toFixed(1)+' '+a[1].toFixed(1)+' L'+b[0].toFixed(1)+' '+b[1].toFixed(1)+'"/>'+s+'</g>';
+  }
+  return s;
+}
+function catSVG(){
+  const eyeOpen=cx=>`<g class="eye"><ellipse cx="${cx}" cy="84" rx="12" ry="14" fill="#fff"/><g class="pupil-g"><ellipse class="k-eye" cx="${cx}" cy="85" rx="9.2" ry="11.4"/><ellipse class="pupil" cx="${cx}" cy="86" rx="5" ry="7" fill="#0b1020"/><circle cx="${cx+3.6}" cy="78.6" r="3.6" fill="#fff"/><circle cx="${cx-3}" cy="90" r="1.8" fill="#fff" opacity=".85"/></g></g>`;
+  const earL='M47 68 C41 52 41 33 49 27 Q56 21 64 27 C74 33 85 40 92 46 Z',earR='M153 68 C159 52 159 33 151 27 Q144 21 136 27 C126 33 115 40 108 46 Z';
+  return`<svg viewBox="0 -20 200 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chú mèo">
+<defs><clipPath id="catClipH"><ellipse cx="100" cy="80" rx="54" ry="43"/></clipPath><clipPath id="catClipB"><ellipse cx="100" cy="146" rx="46" ry="36"/></clipPath></defs>
+<ellipse cx="100" cy="186" rx="56" ry="6" fill="rgba(0,0,0,.16)"/>
+<g class="cat-tail">${_tail('tail-o')}${_tail('tail-i')}${_tail('tail-r')}</g>
+<g class="g-all">
+<ellipse class="k-furs body-e" cx="100" cy="146" rx="46" ry="36"/>
+<g class="pat-tabby"><path class="k-stripe" d="M60 130 L72 134 M58 142 L71 144 M140 130 L128 134 M142 142 L129 144"/></g>
+<g class="pat-patch" clip-path="url(#catClipB)"><ellipse class="k-patch" cx="132" cy="150" rx="18" ry="22"/></g>
+<ellipse class="k-belly" cx="100" cy="156" rx="26" ry="22"/>
+<ellipse class="k-furs" cx="62" cy="161" rx="20" ry="19"/><ellipse class="k-furs" cx="138" cy="161" rx="20" ry="19"/>
+<ellipse class="k-furs" cx="68" cy="177" rx="17" ry="10"/><ellipse class="k-furs" cx="132" cy="177" rx="17" ry="10"/>
+<path class="k-line" stroke-width="1.8" d="M62 177 L62 183 M68 178 L68 184 M74 177 L74 183 M126 177 L126 183 M132 178 L132 184 M138 177 L138 183"/>
+<g class="acc acc-scarf"><path class="k-accs" d="M56 118 Q100 142 144 118 L148 132 Q100 156 52 132 Z"/><path class="k-accs" d="M124 140 L140 172 L122 176 L112 146 Z"/><path d="M66 126 Q100 146 134 126" fill="none" stroke="#fff" stroke-width="2.4" opacity=".4"/></g>
+<g class="head-follow"><g class="cat-head">
+<g class="ear-fl"><g class="cat-ear-l"><path class="k-furs" d="${earL}"/><path class="pat-patch k-patch" d="${earL}"/><path class="k-ear" d="M55 57 C52 47 52 38 56 34 Q60 31 64 35 C70 39 76 43 80 47 Z"/></g></g>
+<g class="ear-fr"><g class="cat-ear-r"><path class="k-furs" d="${earR}"/><path class="k-ear" d="M145 57 C148 47 148 38 144 34 Q140 31 136 35 C130 39 124 43 120 47 Z"/></g></g>
+<ellipse class="k-furs" cx="100" cy="80" rx="54" ry="43"/>
+<g class="pat-patch" clip-path="url(#catClipH)"><ellipse class="k-patch" cx="62" cy="64" rx="30" ry="30"/></g>
+<g class="pat-tabby"><path class="k-stripe" d="M100 38 L100 55 M88 40 L91 54 M112 40 L109 54"/><path class="k-stripe" d="M47 80 L61 82 M48 90 L62 90 M153 80 L139 82 M152 90 L138 90"/></g>
+<ellipse class="cheek" cx="64" cy="103" rx="8" ry="5.5"/><ellipse class="cheek" cx="136" cy="103" rx="8" ry="5.5"/>
+<g class="e-open">${eyeOpen(74)}${eyeOpen(126)}</g>
+<g class="e-happy"><path class="k-ink" d="M63 90 Q74 72 85 90"/><path class="k-ink" d="M115 90 Q126 72 137 90"/></g>
+<g class="e-closed"><path class="k-ink" d="M63 82 Q74 93 85 82"/><path class="k-ink" d="M115 82 Q126 93 137 82"/></g>
+<g class="e-love"><g class="beat"><path d="${_heart(74,84,1.1)}" fill="#f43f5e"/><circle cx="68" cy="79" r="2.2" fill="#fff" opacity=".8"/></g><g class="beat"><path d="${_heart(126,84,1.1)}" fill="#f43f5e"/><circle cx="120" cy="79" r="2.2" fill="#fff" opacity=".8"/></g></g>
+<g class="e-dizzy"><circle cx="74" cy="84" r="13" fill="#fff"/><path class="spiral" d="${_spiral(74,84,11)}" fill="none" stroke="#1f2937" stroke-width="2"/><circle cx="126" cy="84" r="13" fill="#fff"/><path class="spiral" d="${_spiral(126,84,11)}" fill="none" stroke="#1f2937" stroke-width="2"/></g>
+<g class="brow-angry"><path class="k-ink" style="stroke-width:5" d="M58 64 L90 76 M142 64 L110 76"/></g>
+<g class="brow-sad"><path class="k-ink" style="stroke-width:3.6" d="M60 76 L88 64 M140 76 L112 64"/></g>
+<g class="tear"><path class="tear-d" d="M64 98 Q59 108 64 113 Q69 108 64 98Z" fill="#60a5fa"/><path class="tear-d t2" d="M136 98 Q131 108 136 113 Q141 108 136 98Z" fill="#60a5fa"/></g>
+<path d="M94 94 Q100 91 106 94 Q104 100 100 102 Q96 100 94 94 Z" fill="#f472b6"/>
+<path class="m-smile k-mouth" d="M100 102 Q100 109 92 109 M100 102 Q100 109 108 109"/>
+<g class="m-open"><path d="M90 104 Q100 124 110 104 Z" fill="#7f1d1d" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><path d="M94 113 Q100 122 106 113 Q100 110 94 113Z" fill="#fb7185"/></g>
+<g class="m-frown"><path class="k-mouth" d="M91 111 Q100 103 109 111"/><path d="M94 109 L96 114 L98 107 Z M106 109 L104 114 L102 107 Z" fill="#fff"/></g>
+<path class="m-sad k-mouth" d="M92 109 Q96 105 100 108 Q104 105 108 109"/>
+<ellipse class="m-o" cx="100" cy="108" rx="4.5" ry="6" fill="#7f1d1d"/>
+<g class="m-yawn"><ellipse cx="100" cy="110" rx="11" ry="14" fill="#7f1d1d"/><ellipse cx="100" cy="118" rx="7" ry="4.5" fill="#fb7185"/></g>
+<path class="m-wave k-mouth" d="M90 108 Q95 103 100 108 T110 108"/>
+<path class="m-flat k-mouth" d="M91 108 L109 108"/>
+<g class="m-grin"><path d="M83 101 Q100 124 117 101 Q100 108 83 101 Z" fill="#7f1d1d" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><path d="M87 103 Q100 109 113 103 L111 108 Q100 114 89 108 Z" fill="#fff"/><path d="M93 106 L93.6 111 M100 107 L100 113 M107 106 L106.4 111" stroke="#cbd5e1" stroke-width="1.1" stroke-linecap="round"/></g>
+<path class="k-whisk" d="M44 92 L18 86 M44 99 L18 101 M46 105 L22 114 M156 92 L182 86 M156 99 L182 101 M154 105 L178 114"/>
+<g class="shades"><path d="M54 79 L146 79" stroke="#0b0b10" stroke-width="3.4" stroke-linecap="round"/><rect x="56" y="76" width="36" height="22" rx="8" fill="#0b0b10" stroke="#475569" stroke-width="1.6"/><rect x="108" y="76" width="36" height="22" rx="8" fill="#0b0b10" stroke="#475569" stroke-width="1.6"/><path d="M62 82 L72 82 M114 82 L124 82" stroke="#94a3b8" stroke-width="2.4" stroke-linecap="round" opacity=".75"/></g>
+<g class="acc acc-glasses"><circle class="k-glass" cx="74" cy="84" r="17"/><circle class="k-glass" cx="126" cy="84" r="17"/><path class="k-glassl" d="M91 82 Q100 76 109 82 M57 80 L48 74 M143 80 L152 74"/></g>
+<g class="acc acc-bow"><path class="k-accs" d="M138 46 L118 34 Q114 46 118 58 Z"/><path class="k-accs" d="M138 46 L158 34 Q162 46 158 58 Z"/><circle class="k-accs" cx="138" cy="46" r="6.5"/></g>
+<g class="acc acc-hat" style="transform:rotate(-8deg);transform-origin:100px 46px"><path class="k-accs" d="M76 46 L100 -8 L124 46 Z"/><path d="M84 34 L116 34 M90 20 L110 20" stroke="#fff" stroke-width="3" opacity=".7" stroke-linecap="round" fill="none"/><ellipse class="k-accs" cx="100" cy="46" rx="26" ry="5"/><circle cx="100" cy="-9" r="6" fill="#fde68a" stroke="#b45309" stroke-width="2"/></g>
+<g class="acc acc-crown"><path d="M74 48 L72 22 L87 34 L100 16 L113 34 L128 22 L126 48 Z" fill="#fbbf24" stroke="#b45309" stroke-width="2.2" stroke-linejoin="round"/><circle class="k-acc" cx="100" cy="36" r="4"/><circle cx="82" cy="40" r="3" fill="#fff"/><circle cx="118" cy="40" r="3" fill="#fff"/></g>
+</g></g>
+<g class="arm-l"><path class="k-furs" d="M72 133 Q72 123 80 123 Q88 123 88 133 L90 158 Q91 173 80 173 Q69 173 70 158 Z"/><path class="k-line" stroke-width="1.8" d="M76 166 L76 172 M84 166 L84 172"/></g>
+<g class="arm-r"><path class="k-furs" d="M112 133 Q112 123 120 123 Q128 123 128 133 L130 158 Q131 173 120 173 Q109 173 110 158 Z"/><path class="k-line" stroke-width="1.8" d="M116 166 L116 172 M124 166 L124 172"/></g>
+</g></svg>`;
+}
+
+/* ── Markup ── */
+function catStage(){return document.querySelector('.cat-stage');}
+function catPick(a){return a[Math.floor(Math.random()*a.length)];}
+const _catReduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function catHTML(){
-  initCatLook();
-  return `<div class="cat-stage" onclick="catPoke(this)" title="Meo~">
-  <div class="cat-wrap"><div class="cat-jumper">
-  <svg viewBox="0 0 140 135" width="120" height="116" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chú mèo">
-    <g class="cat-tail">
-      <path d="M100 112 C134 112 138 78 122 66" fill="none" stroke="#b45309" stroke-width="13" stroke-linecap="round"/>
-      <path d="M100 112 C134 112 138 78 122 66" fill="none" stroke="#fbbf24" stroke-width="9" stroke-linecap="round"/>
-    </g>
-    <ellipse cx="70" cy="104" rx="35" ry="26" fill="#fbbf24" stroke="#b45309" stroke-width="2.5"/>
-    <ellipse cx="70" cy="111" rx="20" ry="15" fill="#fff7ed"/>
-    <ellipse cx="52" cy="128" rx="13" ry="7" fill="#fff7ed" stroke="#b45309" stroke-width="2.5"/>
-    <ellipse cx="88" cy="128" rx="13" ry="7" fill="#fff7ed" stroke="#b45309" stroke-width="2.5"/>
-    <g class="cat-head">
-      <g class="cat-ear-l">
-        <path d="M36 50 L40 14 L68 36 Z" fill="#fbbf24" stroke="#b45309" stroke-width="2.5" stroke-linejoin="round"/>
-        <path d="M42 40 L44 24 L58 35 Z" fill="#f9a8d4"/>
-      </g>
-      <g class="cat-ear-r">
-        <path d="M104 50 L100 14 L72 36 Z" fill="#fbbf24" stroke="#b45309" stroke-width="2.5" stroke-linejoin="round"/>
-        <path d="M98 40 L96 24 L82 35 Z" fill="#f9a8d4"/>
-      </g>
-      <ellipse cx="70" cy="62" rx="40" ry="34" fill="#fbbf24" stroke="#b45309" stroke-width="2.5"/>
-      <path d="M70 29 L70 40 M60 31 L62 40 M80 31 L78 40" stroke="#d97706" stroke-width="3" stroke-linecap="round" fill="none"/>
-      <ellipse cx="41" cy="73" rx="7" ry="5" fill="#fb7185" opacity=".35"/>
-      <ellipse cx="99" cy="73" rx="7" ry="5" fill="#fb7185" opacity=".35"/>
-      <g class="cat-eye"><ellipse cx="53" cy="60" rx="9" ry="10.5" fill="#fff"/>
-        <g class="cat-pupil"><circle cx="53" cy="61" r="6" fill="#1f2937"/><circle cx="55.5" cy="58" r="2" fill="#fff"/></g></g>
-      <g class="cat-eye"><ellipse cx="87" cy="60" rx="9" ry="10.5" fill="#fff"/>
-        <g class="cat-pupil"><circle cx="87" cy="61" r="6" fill="#1f2937"/><circle cx="89.5" cy="58" r="2" fill="#fff"/></g></g>
-      <path d="M65 71 L75 71 L70 77 Z" fill="#ec4899"/>
-      <path d="M70 77 Q70 84 63 84 M70 77 Q70 84 77 84" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round"/>
-      <path d="M30 70 L10 66 M30 76 L10 80 M110 70 L130 66 M110 76 L130 80" stroke="#fff7ed" stroke-width="1.8" stroke-linecap="round" opacity=".9"/>
-    </g>
-  </svg></div></div>
-  <div class="cat-bubble show first">Meo~ 🐾</div>
+  catInit();
+  const intro=Date.now()-CAT._intro>8000;
+  if(intro){
+    CAT._intro=Date.now();
+    const g=catGreeting();
+    if(CAT.mood==='idle'&&g.m!=='idle')CAT.mood=g.m;
+    CAT._nextAct=Date.now()+10500;CAT._nextTip=Date.now()+26000;
+    setTimeout(()=>{
+      if(!catStage())return;
+      if(!_catReduce&&CAT.mood==='idle')catAct('wave',false,true);
+      else if(CAT.mood==='happy')catFx('star',3);
+      catSay(g.t,6500);
+      catVoice('mew');
+    },1250);
+  }
+  const M=MOODS[CAT.mood]||MOODS.idle;
+  return`<div class="cat-box">
+  <div class="cat-stage" data-mood="${CAT.mood}" data-acc="${CAT.accessory}" data-pat="${CAT.pat}" data-gender="${CAT.gender}" data-full="${catFullState()}" style="${catStyle()}" tabindex="0" role="button" aria-label="Chú mèo ${esc(CAT.name)} — bấm để cho ăn hoặc chọc, chuột phải để cài đặt" onpointerdown="catDown(event)" onpointerenter="catHover(event)" onkeydown="catKey(event)" oncontextmenu="return catCtx(event)">
+    <div class="cat-wrap${intro?' intro':''}"><div class="cat-mood"><div class="cat-jumper">${catSVG()}</div></div></div>
+    <div class="cat-bubble"></div>
+  </div>
+  <div class="cat-tag"><span class="cat-tag-e">${M.e}</span><span class="cat-tag-n">${esc(CAT.name)}</span><span class="cat-lv">Lv ${catLevel()+1}</span><button type="button" class="cat-gear" onclick="catPanel(!document.documentElement.classList.contains('cat-cp-open'))" title="Cài đặt mèo (hoặc bấm chuột phải vào mèo)" aria-label="Cài đặt mèo">⚙️</button></div>
+  <div class="cat-xp" title="Tiến độ lớn lên"><i style="width:${Math.round(catProg()*100)}%"></i></div>
+  <div class="cat-hint">Bấm: cho ăn / chọc · Giữ: vuốt ve · Chuột phải: cài đặt</div>
   </div>`;
 }
-const CAT_LINES=['Meo~ 🐾','Meo meo! Chơi quiz nào!','Purrr… 💜','Hôm nay đúng hết nhé!','Gừ gừ… tập trung nào!'];
-window.catPoke=(el)=>{
-  SFX.meow();
-  const j=el.querySelector('.cat-jumper');
-  if(j){j.classList.remove('cat-jump');void j.offsetWidth;j.classList.add('cat-jump');}
-  const b=el.querySelector('.cat-bubble');
-  if(b){
-    b.textContent=CAT_LINES[Math.floor(Math.random()*CAT_LINES.length)];
-    b.classList.remove('show','first');void b.offsetWidth;b.classList.add('show');
-  }
-};
-let _catLook=false;
-function initCatLook(){
-  if(_catLook)return;_catLook=true;
-  window.addEventListener('pointermove',e=>{
-    const st=document.querySelector('.cat-stage');if(!st)return;
-    const r=st.getBoundingClientRect();
-    const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height*.45);
-    const d=Math.hypot(dx,dy)||1,k=Math.min(1,d/160)*3.2;
-    const x=(dx/d*k).toFixed(2),y=(dy/d*k*.8).toFixed(2);
-    document.querySelectorAll('.cat-pupil').forEach(p=>{p.style.transform='translate('+x+'px,'+y+'px)';});
-  },{passive:true});
+
+/* ── Áp dụng trạng thái ── */
+function catApply(){
+  const M=MOODS[CAT.mood]||MOODS.idle;
+  document.querySelectorAll('.cat-stage').forEach(st=>{
+    st.setAttribute('style',catStyle());
+    st.dataset.mood=CAT.mood;st.dataset.acc=CAT.accessory;st.dataset.pat=CAT.pat;st.dataset.gender=CAT.gender;st.dataset.full=catFullState();
+    st.setAttribute('aria-label','Chú mèo '+CAT.name+' — bấm để cho ăn hoặc chọc, chuột phải để cài đặt');
+  });
+  document.querySelectorAll('.cat-tag-e').forEach(e=>e.textContent=M.e);
+  document.querySelectorAll('.cat-tag-n').forEach(e=>e.textContent=CAT.name);
+  document.querySelectorAll('.cat-lv').forEach(e=>e.textContent='Lv '+(catLevel()+1));
+  document.querySelectorAll('.cat-xp i').forEach(e=>e.style.width=Math.round(catProg()*100)+'%');
+  catPanelSync();
 }
+
+/* ── Lời thoại ── */
+function catSay(t,ms){
+  if(!CAT.notes||!t)return;
+  const b=document.querySelector('.cat-bubble');if(!b)return;
+  b.textContent=t;b.classList.remove('show');void b.offsetWidth;
+  b.style.setProperty('--bd',(ms||3400)+'ms');b.classList.add('show');
+  CAT._sayAt=Date.now();
+}
+
+/* ── Hạt hiệu ứng ── */
+function catFx(kind,n,col){
+  const st=catStage();if(!st||document.hidden)return;
+  if(st.querySelectorAll('.cat-p').length>40)return;
+  const W=st.offsetWidth||140,k=W/140,list=FX[kind]||FX.heart;
+  for(let i=0;i<n;i++){
+    const el=document.createElement('span');el.className='cat-p';el.textContent=catPick(list);
+    el.style.fontSize=(kind==='zzz'?14+Math.random()*8:kind==='crumb'?9+Math.random()*6:13+Math.random()*9)*Math.max(.85,k)+'px';
+    if(col)el.style.color=col;
+    const delay=i*(kind==='star'||kind==='crumb'?30:110);let a;
+    const T='translate(-50%,-50%) ';
+    if(kind==='star'||kind==='drop'||kind==='crumb'){
+      el.style.left='50%';el.style.top=(kind==='drop'?'58%':kind==='crumb'?'64%':'36%');st.appendChild(el);
+      const ang=kind==='drop'?Math.PI*(.2+Math.random()*.6):kind==='crumb'?Math.PI*(.05+Math.random()*.9):Math.random()*Math.PI*2;
+      const d=(kind==='crumb'?18+Math.random()*28:30+Math.random()*50)*k;
+      const dx=Math.cos(ang)*d,dy=Math.sin(ang)*d+(kind==='drop'||kind==='crumb'?16*k:0);
+      a=el.animate([{transform:T+'scale(.3)',opacity:0},{transform:T+'translate('+dx*.6+'px,'+dy*.6+'px) scale(1.1)',opacity:1,offset:.3},{transform:T+'translate('+dx+'px,'+dy+'px) scale(.4)',opacity:0}],{duration:kind==='crumb'?620:760,delay:delay,easing:'cubic-bezier(.1,.8,.3,1)',fill:'both'});
+    }else if(kind==='zzz'){
+      el.style.left='62%';el.style.top='22%';st.appendChild(el);
+      a=el.animate([{transform:T+'scale(.5)',opacity:0},{transform:T+'translate('+8*k+'px,'+-14*k+'px) scale(1)',opacity:1,offset:.3},{transform:T+'translate('+26*k+'px,'+-42*k+'px) scale(1.25)',opacity:0}],{duration:1900,delay:delay,easing:'ease-out',fill:'both'});
+    }else{
+      el.style.left=(50+(Math.random()-.5)*50)+'%';el.style.top=(26+Math.random()*10)+'%';st.appendChild(el);
+      const dx=(Math.random()-.5)*44*k,dy=(46+Math.random()*30)*k;
+      a=el.animate([{transform:T+'scale(.5)',opacity:0},{transform:T+'translate('+dx*.4+'px,'+-dy*.5+'px) scale(1)',opacity:1,offset:.25},{transform:T+'translate('+dx+'px,'+-dy+'px) scale(1.1)',opacity:0}],{duration:1000+Math.random()*600,delay:delay,easing:'ease-out',fill:'both'});
+    }
+    a.onfinish=()=>el.remove();
+  }
+}
+
+/* ── Cho ăn ── */
+function catFoodFly(F){
+  const st=catStage();if(!st)return;
+  const W=st.offsetWidth,H=st.offsetHeight;
+  const f=document.createElement('span');f.className='cat-p';f.textContent=F.e;
+  f.style.cssText='left:90%;top:-4%;z-index:6;font-size:'+(24*Math.max(.9,W/140))+'px';
+  st.appendChild(f);
+  const base='translate(-50%,-50%) translate('+(-W*.4)+'px,'+(H*.68)+'px)';
+  f.animate([{transform:'translate(-50%,-50%) rotate(-25deg) scale(1)',opacity:1},{transform:base+' rotate(8deg) scale(1)',opacity:1}],{duration:850,easing:'cubic-bezier(.35,.1,.5,1)',fill:'forwards'}).onfinish=()=>{
+    f.animate([{transform:base+' rotate(8deg) scale(1)'},{transform:base+' rotate(-6deg) scale(.04)'}],{duration:1800,easing:'steps(5,end)',fill:'forwards'}).onfinish=()=>f.remove();
+  };
+  for(let i=1;i<=5;i++)setTimeout(()=>{catFx('crumb',3,F.c);catVoice('munch');},850+i*360-60);
+}
+function catFeedFood(k){
+  const F=FOODS[k];if(!F||!catStage()||CAT._eating)return;
+  catMenu(false);
+  CAT._last=Date.now();
+  if(CAT.mood==='sleep'||CAT.mood==='sleepy')catSetMood('idle',{silent:true});
+  if(CAT.full>=92){catAct('no',true,true);catSay(catPick(FULL_LINES),3200);catVoice('sad');return;}
+  CAT._eating=true;
+  catAct('eat',true,true);
+  catSay(catPick(F.say),2800);
+  catFoodFly(F);
+  setTimeout(()=>catEatDone(k),2750);
+}
+function catEatDone(k){
+  CAT._eating=false;
+  const F=FOODS[k],old=catLevel();
+  CAT.xp+=F.xp;CAT.full=Math.min(100,CAT.full+F.f);CAT.fed=(CAT.fed||0)+1;
+  catSave();
+  const nl=catLevel();
+  catApply();
+  if(!catStage())return;
+  if(nl>old)catLevelUp(nl);
+  else{catSay(catPick(F.done),3200);catFx('heart',3);catVoice('mew');catTemp('happy',2200,true);}
+}
+function catLevelUp(l){
+  catAct('spin',true,true);
+  catFx('star',10);
+  catSay('Lên cấp '+(l+1)+'! Mình đã thành "'+LV[l].n+'" rồi 🎉',5600);
+  try{if(CAT.sound&&typeof SFX!=='undefined'&&SFX.streak)SFX.streak();}catch(e){}
+}
+
+/* ── Hành động ── */
+function catClearAct(st){
+  st=st||catStage();
+  if(st)[...st.classList].forEach(c=>{if(c.indexOf('act-')===0)st.classList.remove(c);});
+  CAT._act=null;
+}
+function catAct(name,force,silent){
+  const st=catStage(),A=ACTS[name];if(!st||!A)return false;
+  if(CAT._act&&!force)return false;
+  clearTimeout(CAT._actT);catClearAct(st);
+  CAT._act=name;st.classList.add('act-'+name);
+  CAT._actT=setTimeout(()=>{const s=catStage();if(s)s.classList.remove('act-'+name);CAT._act=null;},A.dur);
+  if(!silent){const s=typeof A.say==='function'?A.say():(A.say&&A.say.length?catPick(A.say):null);if(s)catSay(s);}
+  if(A.v)catVoice(A.v);
+  if(A.fx)catFx(A.fx[0],A.fx[1]);
+  return true;
+}
+
+/* ── Trạng thái (mood) ── */
+function catSetMood(m,o){
+  o=o||{};if(!MOODS[m])return;
+  clearTimeout(CAT._tmpT);CAT._tmpT=0;
+  catClearAct();
+  CAT.mood=m;
+  if(!o.temp)CAT._prev=null;
+  CAT._autoSlept=(m==='sleep'||m==='sleepy')?!!o.auto:false;
+  if(!o.auto)CAT._last=Date.now();
+  const st=catStage();
+  if(st&&(m==='sleep'||m==='purr'||m==='dizzy')){
+    st.querySelectorAll('.pupil-g').forEach(p=>p.style.transform='');
+    st.querySelectorAll('.ear-fl,.ear-fr,.head-follow').forEach(p=>p.style.transform='');
+  }
+  catApply();
+  const M=MOODS[m];
+  if(!o.silent){catSay(catPick(M.say));if(M.v)catVoice(M.v);}
+  if(m==='surprised')catFx('exc',1);
+  if(m==='angry')catFx('anger',1);
+  if(m==='love')catFx('heart',4);
+  if(m==='happy'&&!o.silent)catFx('star',4);
+}
+function catTemp(m,ms,silent){
+  if(CAT._prev===null)CAT._prev=CAT.mood;
+  catSetMood(m,{temp:true,silent:!!silent});
+  clearTimeout(CAT._tmpT);
+  CAT._tmpT=setTimeout(()=>{const p=CAT._prev;CAT._prev=null;catSetMood(p||'idle',{silent:true});},ms);
+}
+
+/* ── Menu bấm chuột trái (cho ăn / chọc) ── */
+function catMenu(open,view){
+  const st=catStage();if(!st)return;
+  let m=st.querySelector('.cat-menu');
+  clearTimeout(CAT._menuT);
+  if(!open){
+    CAT._menuOn=false;
+    if(m){m.classList.remove('show');setTimeout(()=>m.remove(),200);}
+    return;
+  }
+  if(!m){
+    m=document.createElement('div');m.className='cat-menu';m.setAttribute('role','menu');
+    m.addEventListener('pointerdown',e=>e.stopPropagation());
+    m.addEventListener('click',catMenuClick);
+    m.addEventListener('contextmenu',e=>{e.preventDefault();e.stopPropagation();});
+    st.appendChild(m);
+  }
+  if(view==='food'){
+    m.innerHTML='<div class="cat-menu-t">Độ no '+Math.round(CAT.full)+'%</div><div class="fg">'+Object.keys(FOODS).map(k=>'<button type="button" class="fd" data-m="food" data-v="'+k+'"><span>'+FOODS[k].e+'</span><span>'+FOODS[k].n+'</span></button>').join('')+'</div><button type="button" class="bk" data-m="back">‹ Quay lại</button>';
+  }else{
+    m.innerHTML='<button type="button" data-m="feed"><span>🍖</span>Cho ăn</button><button type="button" data-m="poke"><span>👉</span>Chọc</button>';
+  }
+  void m.offsetWidth;m.classList.add('show');CAT._menuOn=true;
+  CAT._menuT=setTimeout(()=>catMenu(false),8000);
+}
+function catMenuClick(e){
+  const b=e.target.closest('[data-m]');if(!b)return;
+  e.stopPropagation();CAT._last=Date.now();
+  const m=b.dataset.m;
+  if(m==='feed')catMenu(true,'food');
+  else if(m==='back')catMenu(true,'main');
+  else if(m==='poke'){catMenu(false);catPoke();}
+  else if(m==='food')catFeedFood(b.dataset.v);
+}
+
+/* ── Chạm / giữ / chuột phải ── */
+window.catClick=function(){
+  CAT._last=Date.now();
+  if(CAT.mood==='sleep'||CAT.mood==='sleepy'){
+    const auto=CAT._autoSlept;
+    catTemp('surprised',1200);
+    if(auto)CAT._prev='idle';
+    catSay('Hả?! Meo! 🙀 Giật cả mình!');
+    return;
+  }
+  if(CAT._menuOn){catMenu(false);return;}
+  catMenu(true,'main');
+  catAct('earperk',false,true);
+  catSay(catPick(['Bạn muốn làm gì với mình nè? 🐾','Cho mình ăn hay chọc mình đây? 😼','Meo? Chọn đi nào~']),3000);
+};
+window.catPoke=function(){
+  const now=Date.now();
+  CAT._last=now;
+  CAT._clicks=CAT._clicks.filter(t=>now-t<2600);CAT._clicks.push(now);
+  const n=CAT._clicks.length;
+  if(CAT.mood==='sleep'||CAT.mood==='sleepy'){catClick();return;}
+  if(n>=4&&CAT.mood!=='dizzy'){CAT._clicks=[];catTemp('dizzy',3200);catSay('Chọc nhiều quá… chóng mặt rồi 😵‍💫',3200);return;}
+  if(n===3&&CAT.mood==='idle'){catTemp('angry',1600,true);catSay('Gừ! Đừng chọc nữa mà! 💢');catVoice('hiss');return;}
+  if(n===2){catTemp('happy',1500,true);catSay('Nhột quá đi! 😹');catVoice('mew');catAct('jump',true,true);return;}
+  catAct(catPick(CLICK_ACTS),true);
+};
+window.catKey=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();catClick();}};
+window.catHover=function(e){
+  if(e&&e.pointerType&&e.pointerType!=='mouse')return;
+  const now=Date.now();
+  if(now-CAT._sayAt>14000&&!CAT._menuOn&&CAT.mood==='idle'&&!CAT._act)catSay(catPick(HOVER_LINES),2800);
+};
+window.catCtx=function(e){
+  e.preventDefault();e.stopPropagation();
+  if(CAT._ptr==='touch'||CAT._holding)return false;
+  catMenu(false);catPanel(true);
+  if(CAT.mood==='idle')catSay(catPick(['Muốn đổi kiểu cho mình hả? 🎀','Chỉnh sửa mình nè~ ✨','Thay áo mới cho mình đi! 👗']),2600);
+  return false;
+};
+window.catDown=function(e){
+  CAT._ptr=e.pointerType||'mouse';
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  CAT._last=Date.now();
+  CAT._down={x:e.clientX,y:e.clientY};
+  clearTimeout(CAT._holdT);
+  CAT._holdT=setTimeout(()=>{if(!CAT._down)return;CAT._holding=true;catPetStart();},430);
+};
+function catPetStart(){
+  catMenu(false);
+  if(CAT._prev===null)CAT._prev=CAT.mood;
+  catSetMood('purr',{temp:true,silent:true});
+  catSay(catPick(['Purrrr… 💜','Gừ gừ… sướng quá~','Mmm… vuốt nữa đi~']),2600);
+  CAT._purr=catPurrStart();
+  catFx('heart',3);
+}
+function catPetEnd(){
+  if(CAT._purr){CAT._purr();CAT._purr=null;}
+  const p=CAT._prev;CAT._prev=null;
+  catSetMood(p||'idle',{silent:true});
+  catSay(catPick(['Thích quá đi~ 😻','Cảm ơn nha! 💕','Meo~ vuốt nữa nha']));
+  catFx('heart',4);catVoice('mew');
+}
+function catUp(e){
+  if(!CAT._down)return;
+  const d=CAT._down;CAT._down=null;clearTimeout(CAT._holdT);
+  if(CAT._holding){CAT._holding=false;catPetEnd();return;}
+  if(e.type==='pointercancel')return;
+  const st=catStage(),t=document.elementFromPoint(e.clientX,e.clientY);
+  if(st&&t&&st.contains(t)&&!t.closest('.cat-menu')&&Math.hypot(e.clientX-d.x,e.clientY-d.y)<14)catClick();
+}
+
+/* ── Nhìn theo con trỏ (mắt, đầu, tai) ── */
+function catLook(e){
+  CAT._last=Date.now();
+  if(CAT._down&&!CAT._holding&&Math.hypot(e.clientX-CAT._down.x,e.clientY-CAT._down.y)>14)clearTimeout(CAT._holdT);
+  const st=catStage();if(!st)return;
+  const m=CAT.mood;if(m==='sleep'||m==='purr'||m==='dizzy')return;
+  const r=st.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height*.42;
+  const dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy)||1,k=Math.min(1,d/180);
+  const px=(dx/d*k*2.6).toFixed(2),py=(dy/d*k*2.2).toFixed(2);
+  st.querySelectorAll('.pupil-g').forEach(p=>{p.style.transform='translate('+px+'px,'+py+'px)';});
+  const hf=st.querySelector('.head-follow');
+  if(hf)hf.style.transform='rotate('+(dx/d*k*5).toFixed(1)+'deg) translate('+(dx/d*k*2.5).toFixed(1)+'px,'+(dy/d*k*1.2).toFixed(1)+'px)';
+  const er=(dx/d*k*7).toFixed(1),es=(1+(dy<0?k*.06:0)).toFixed(3);
+  st.querySelectorAll('.ear-fl,.ear-fr').forEach(p=>{p.style.transform='rotate('+er+'deg) scale('+es+')';});
+}
+
+/* ── Vòng lặp tự động ── */
+function catTick(){
+  CAT._tick++;
+  const now=Date.now(),dt=(now-CAT._decayAt)/60000;CAT._decayAt=now;
+  CAT.full=Math.max(0,CAT.full-dt);
+  if(CAT._tick%25===0){catSave();catPanelSync();}
+  const st=catStage();if(!st||document.hidden)return;
+  const m=CAT.mood,n=CAT._tick;
+  if(st.dataset.full!==catFullState())st.dataset.full=catFullState();
+  if(m==='love')catFx('heart',1);
+  else if(m==='sleep'){if(n%2===0)catFx('zzz',1);}
+  else if(m==='angry'){if(n%3===0)catFx('anger',1);}
+  else if(m==='happy'){if(n%3===0)catFx('star',2);}
+  else if(m==='purr'){if(n%2===0)catFx('heart',1);}
+  else if(m==='dizzy'){if(n%2===0)catFx('dizzy',1);}
+  else if(m==='wave'){if(n%4===0)catFx('note',1);}
+  if(m==='sleepy'&&CAT._autoSlept&&now-CAT._sleepAt>7000){catSetMood('sleep',{auto:true});return;}
+  if(m!=='idle'||!CAT.auto||_catReduce)return;
+  if(CAT._holding||CAT._down||CAT._act||CAT._eating||CAT._menuOn)return;
+  if(now-CAT._last>38000){catSetMood('sleepy',{auto:true});CAT._sleepAt=now;return;}
+  if(CAT.full<22&&now>CAT._nextHungry){CAT._nextHungry=now+34000;catAct('grumble',true);return;}
+  if(now>CAT._nextAct){CAT._nextAct=now+5000+Math.random()*5500;catAct(catPick(AUTO_ACTS));return;}
+  if(now>CAT._nextTip&&now-CAT._sayAt>6000){
+    CAT._nextTip=now+24000+Math.random()*16000;
+    let pool=CAT_TIPS.concat(catTimeNotes(),catTimeNotes());
+    const sn=catStreakNote();if(sn)pool.push(sn);
+    if(CAT.full<40)pool=pool.concat(catHungerNotes(),catHungerNotes());
+    catSay(catPick(pool),4400);
+  }
+}
+function catInit(){
+  if(CAT._inited)return;CAT._inited=true;
+  window.addEventListener('pointermove',catLook,{passive:true});
+  window.addEventListener('pointerup',catUp);
+  window.addEventListener('pointercancel',catUp);
+  window.addEventListener('pointerdown',e=>{
+    CAT._last=Date.now();
+    const t=e.target&&e.target.closest?e.target:null;
+    if(CAT._menuOn&&t&&!t.closest('.cat-stage'))catMenu(false);
+    if(CAT._autoSlept&&t&&!t.closest('.cat-stage')&&!t.closest('.cp')){
+      catSetMood('idle',{silent:true});catSay('Hửm? 😺 Dậy rồi nè~');
+    }
+  },{passive:true});
+  window.addEventListener('keydown',e=>{CAT._last=Date.now();if(e.key==='Escape'){catMenu(false);catPanelClose();}},{passive:true});
+  setInterval(catTick,800);
+}
+
+/* ── Bảng tùy chỉnh bên phải (chuột phải vào mèo) ── */
+let _cp=null;
+function catPanelHTML(){
+  const dots=(arr,key)=>arr.map(a=>`<button type="button" class="cp-dot" data-a="${key}" data-v="${a[0]}" title="${a[1]}" aria-label="${a[1]}" style="background:${a[0]}"></button>`).join('');
+  const chips=(arr,key)=>arr.map(a=>`<button type="button" class="cp-chip" data-a="${key}" data-v="${a[0]}"><span class="cp-ce">${a[2]||''}</span><span>${a[1]}</span></button>`).join('');
+  const moods=Object.keys(MOODS).map(k=>[k,MOODS[k].n,MOODS[k].e]);
+  const foods=Object.keys(FOODS).map(k=>[k,FOODS[k].n+' +'+FOODS[k].xp,FOODS[k].e]);
+  const pick=id=>`<label class="cp-dot cp-pick" title="Chọn màu khác"><input type="color" id="${id}" aria-label="Chọn màu khác"></label>`;
+  const tog=(k,l)=>`<button type="button" class="cp-tog" role="switch" data-t="${k}" aria-checked="true"><span>${l}</span><i></i></button>`;
+  return`<div class="cp-head"><div class="cp-av" id="cp-av">😺</div><div style="flex:1;min-width:0"><div class="cp-title">Cài đặt mèo</div><div class="cp-sub" id="cp-sub"></div></div><button type="button" class="btn btn-ghost btn-icon" data-a="close" aria-label="Đóng">✕</button></div>
+<div class="cp-body">
+<div class="cp-sec"><div class="cp-t">Tên mèo</div><input class="inp" id="cp-name" maxlength="14" placeholder="Mochi" autocomplete="off"></div>
+<div class="cp-sec"><div class="cp-t">Nuôi mèo · cho ăn để lớn lên</div>
+<div class="cp-lv"><b id="cp-lvn">Lv 1</b><span id="cp-xpt"></span></div><div class="cp-bar xp"><i id="cp-xp"></i></div>
+<div class="cp-lv" style="margin-top:9px"><b>Độ no</b><span id="cp-fullt"></span></div><div class="cp-bar fl"><i id="cp-full"></i></div>
+<div class="cp-grid" style="margin-top:10px">${chips(foods,'feed')}</div></div>
+<div class="cp-sec"><div class="cp-t">Trạng thái</div><div class="cp-grid">${chips(moods,'mood')}</div></div>
+<div class="cp-sec"><div class="cp-t">Hành động</div><div class="cp-grid">${chips(ACTS_UI,'act')}</div></div>
+<div class="cp-sec"><div class="cp-t">Giới tính</div><div class="cp-grid" style="grid-template-columns:repeat(2,1fr)">${chips(GENDERS,'gender')}</div></div>
+<div class="cp-sec"><div class="cp-t">Màu lông</div><div class="cp-sw">${dots(FUR_SW,'fur')}${pick('cp-fur-c')}</div></div>
+<div class="cp-sec"><div class="cp-t">Hoa văn</div><div class="cp-grid">${chips(PATS,'pat')}</div></div>
+<div class="cp-sec"><div class="cp-t">Màu mắt</div><div class="cp-sw">${dots(EYE_SW,'eye')}${pick('cp-eye-c')}</div></div>
+<div class="cp-sec"><div class="cp-t">Phụ kiện</div><div class="cp-grid" style="margin-bottom:10px">${chips(ACC_LIST,'accessory')}</div><div class="cp-t" style="margin-top:4px">Màu phụ kiện</div><div class="cp-sw">${dots(ACC_SW,'acc')}${pick('cp-acc-c')}</div></div>
+<div class="cp-sec"><div class="cp-t">Tùy chọn</div>${tog('auto','Tự cử động &amp; tự ngủ')}${tog('sound','Âm thanh meo')}${tog('notes','Hiện lời thoại')}</div>
+<div class="cp-sec"><div class="cp-tips">💡 <b>Mẹo nhỏ</b><br>• Bấm chuột trái vào mèo: chọn <b>Cho ăn</b> hoặc <b>Chọc</b><br>• Cho ăn nhiều thì mèo lớn dần (Lv 1 → Lv 6), no quá sẽ từ chối<br>• Giữ chuột / ngón tay: vuốt ve, mèo gừ gừ<br>• Chuột phải vào mèo: mở bảng này<br>• Để yên lâu: mèo buồn ngủ rồi ngủ khò<br>• Mặc định mèo là con đực, bạn đổi được ở mục Giới tính<br>• Mèo chào bạn theo buổi sáng / trưa / chiều / tối<br>• Chuột phải ra nền: hút các hạt sáng · chuột trái: đẩy các hạt ra</div></div>
+<button type="button" class="btn btn-ghost btn-full btn-sm" data-a="reset" style="margin-bottom:8px">↺ Đặt lại giao diện mèo</button>
+<button type="button" class="btn btn-ghost btn-full btn-sm" data-a="resetgrow">🍼 Nuôi lại từ đầu (về Lv 1)</button>
+</div>`;
+}
+function catPanelBuild(){
+  const el=document.createElement('aside');
+  el.className='cp';el.id='cat-panel';el.setAttribute('aria-label','Cài đặt mèo');el.setAttribute('inert','');
+  el.innerHTML=catPanelHTML();
+  document.body.appendChild(el);
+  el.addEventListener('click',catPanelClick);
+  el.addEventListener('input',catPanelInput);
+  _cp=el;void el.offsetWidth;return el;
+}
+function catPanelSync(){
+  if(!_cp)return;
+  const M=MOODS[CAT.mood]||MOODS.idle,l=catLevel(),nx=LV[l+1];
+  _cp.querySelector('#cp-av').textContent=M.e;
+  _cp.querySelector('#cp-sub').textContent=CAT.name+' · Lv '+(l+1)+' · '+M.n;
+  _cp.querySelector('#cp-lvn').textContent='Lv '+(l+1)+' · '+LV[l].n;
+  _cp.querySelector('#cp-xpt').textContent=nx?(CAT.xp-LV[l].x)+' / '+(nx.x-LV[l].x)+' điểm':'Tối đa! 🎉';
+  _cp.querySelector('#cp-xp').style.width=Math.round(catProg()*100)+'%';
+  _cp.querySelector('#cp-fullt').textContent=Math.round(CAT.full)+'%';
+  _cp.querySelector('#cp-full').style.width=Math.round(CAT.full)+'%';
+  _cp.querySelectorAll('[data-a=mood]').forEach(b=>b.classList.toggle('on',b.dataset.v===CAT.mood));
+  const mark=(a,cur)=>_cp.querySelectorAll('[data-a='+a+']').forEach(b=>b.classList.toggle('on',b.dataset.v.toLowerCase()===String(cur).toLowerCase()));
+  mark('fur',CAT.fur);mark('eye',CAT.eye);mark('acc',CAT.acc);mark('pat',CAT.pat);mark('gender',CAT.gender);mark('accessory',CAT.accessory);
+  const set=(id,v)=>{const x=_cp.querySelector('#'+id);if(x&&document.activeElement!==x)x.value=v;};
+  set('cp-name',CAT.name);set('cp-fur-c',CAT.fur);set('cp-eye-c',CAT.eye);set('cp-acc-c',CAT.acc);
+  ['auto','sound','notes'].forEach(k=>{const b=_cp.querySelector('[data-t='+k+']');if(b)b.setAttribute('aria-checked',CAT[k]?'true':'false');});
+}
+const _LOOK_LINES=['Màu mới hả? Đẹp quá! ✨','Ôi, mình xinh hơn rồi nè 😻','Hợp với mình ghê~ 💖','Thích lắm luôn! 🐾'];
+function catPanelClick(e){
+  const b=e.target.closest('[data-a],[data-t]');if(!b||!_cp.contains(b))return;
+  CAT._last=Date.now();
+  if(b.dataset.t){
+    const k=b.dataset.t;CAT[k]=!CAT[k];
+    if(k==='sound'&&CAT.sound)catVoice('mew');
+    if(k==='auto'&&CAT.auto){CAT._nextAct=Date.now()+2500;CAT._last=Date.now();}
+    if(k==='notes'&&CAT.notes)catSay('Mình nói chuyện lại được rồi nè~ 🐾');
+    catSave();catPanelSync();return;
+  }
+  const a=b.dataset.a,v=b.dataset.v;
+  switch(a){
+    case'close':catPanel(false);return;
+    case'mood':catSetMood(v);break;
+    case'act':catAct(v,true);break;
+    case'feed':catFeedFood(v);break;
+    case'reset':catReset();return;
+    case'resetgrow':catResetGrow();return;
+    case'fur':CAT.fur=v;break;
+    case'eye':CAT.eye=v;break;
+    case'acc':CAT.acc=v;break;
+    case'pat':CAT.pat=v;break;
+    case'gender':CAT.gender=v;if(CAT.accessory==='none'||CAT.accessory==='bow')CAT.accessory=v==='female'?'bow':'none';break;
+    case'accessory':CAT.accessory=v;break;
+  }
+  if(a==='fur'||a==='eye'||a==='acc'||a==='pat'||a==='accessory'||a==='gender'){
+    catSave();catApply();
+    if(a==='accessory'&&v!=='none')catFx('star',3);
+    catSay(catPick(_LOOK_LINES),2600);
+  }
+  catPanelSync();
+}
+function catPanelInput(e){
+  const t=e.target;CAT._last=Date.now();
+  if(t.id==='cp-name')CAT.name=(t.value.trim()||'Mochi').slice(0,14);
+  else if(t.id==='cp-fur-c')CAT.fur=t.value;
+  else if(t.id==='cp-eye-c')CAT.eye=t.value;
+  else if(t.id==='cp-acc-c')CAT.acc=t.value;
+  else return;
+  catSave();catApply();
+}
+function catReset(){
+  ['fur','eye','acc','pat','accessory','gender','name','auto','sound','notes'].forEach(k=>{CAT[k]=CAT_DEF[k];});
+  catSetMood('idle',{silent:true});
+  catSave();catApply();
+  catSay('Đã về như ban đầu! 🐾');
+}
+function catResetGrow(){
+  const go=()=>{CAT.xp=0;CAT.full=55;CAT.fed=0;catSave();catApply();catSay('Mình lại là mèo con rồi~ 🍼');};
+  if(typeof uiConfirm==='function')uiConfirm('Nuôi mèo lại từ đầu?\nCấp độ và độ no sẽ về ban đầu.',go);else go();
+}
+window.catPanel=function(open){
+  if(open&&!catStage())return;
+  const el=_cp||catPanelBuild();
+  if(open){catMenu(false);catPanelSync();}
+  el.classList.toggle('open',!!open);
+  document.documentElement.classList.toggle('cat-cp-open',!!open);
+  el.setAttribute('aria-hidden',open?'false':'true');
+  if(open)el.removeAttribute('inert');else el.setAttribute('inert','');
+};
+window.catPanelClose=function(){if(_cp&&_cp.classList.contains('open'))catPanel(false);};
 
 /* ── RENDERER ── */
 const $app=document.getElementById('app');
@@ -711,6 +1710,7 @@ let _rAF=null;
 function render(){if(_rAF)cancelAnimationFrame(_rAF);_rAF=requestAnimationFrame(_doRender);}
 function _doRender(){
   document.body.className=S.darkMode?'':'light';
+  if(S.screen!=='menu'&&window.catPanelClose)catPanelClose();
   if(S.modal){renderModal();return;}
   switch(S.screen){
     case'menu':renderMenu();break;
@@ -2032,7 +3032,7 @@ function hasFmt(s){
   const ring=document.getElementById('cursor-ring');
   const fine=window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const CLICKABLE='a,button,select,label,summary,[onclick],[role="button"],.btn,.opt,.upload-zone,.img-zoomable,.rte-btn,.toggle .topt';
+  const CLICKABLE='a,button,select,label,summary,[onclick],[role="button"],.btn,.opt,.upload-zone,.img-zoomable,.rte-btn,.toggle .topt,input[type=range],input[type=color]';
   let hue=260,mx=-100,my=-100,rx=-100,ry=-100,shown=false;
   if(fine&&dot&&ring){
     document.documentElement.classList.add('has-cursor');
